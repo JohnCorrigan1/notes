@@ -4,10 +4,10 @@ CREATE TABLE users (
 );
 
 CREATE TABLE posts (
-    postId serial PRIMARY KEY,
+    post_id serial PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     body TEXT,
-    postedDate TIMESTAMP,
+    posted_date TIMESTAMP,
     likes integer,
     author_id integer REFERENCES users(id)
 );
@@ -15,7 +15,8 @@ CREATE TABLE posts (
 CREATE TABLE comments (
     id serial PRIMARY KEY,
     body TEXT,
-    postedDate TIMESTAMP,
+    posted_date TIMESTAMP,
+    likes integer,
     user_id integer REFERENCES users(id),
     post_id integer REFERENCES posts(postId)
 );
