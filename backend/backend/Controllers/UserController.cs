@@ -19,9 +19,23 @@ public class UserController : Controller
     }
 
     [HttpGet("{id}", Name = "GetUser")]
-    public async Task<User> GetUser(int id)
+    public async Task<IActionResult> GetUser(int id)
     {
-        return await _userService.GetUser(id);
+        try
+        {
+            var user = await _userService.GetUser(id);
+            if(user == null)
+	        {
+                return NotFound(); 
+	        }
+
+           return Ok(user);
+
+        }
+        catch (UserNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [HttpPost(Name = "CreateUser")]
@@ -33,14 +47,14 @@ public class UserController : Controller
     [HttpPut("update", Name = "UpdateUser")]
     public async Task<IActionResult> UpdateUser(User user)
     {
-        try 
-	    { 
+        try
+        {
             await _userService.UpdateUser(user);
             return Ok();
-	    } 
-	    catch (UserNotFoundException ex)
+        }
+        catch (UserNotFoundException ex)
         {
             return NotFound(ex.Message);
-	    }
+        }
     }
 }
