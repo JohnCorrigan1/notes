@@ -1,12 +1,15 @@
-﻿using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models;
+using Npgsql;
+using backend;
+using backend.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -16,25 +19,32 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+//use lowercase urls
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+//database setup
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+//connect
+await using var con = new NpgsqlConnection(connectionString);
+await con.OpenAsync();
+
+//add to context to use in controllers 
+builder.Services.AddScoped<DB>(_ => new DB(con));
+
+//add services to controllers context
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
+
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+//using swagger page in dev and prod envs for now
+//can add if statement to only use swagger ui in dev env
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notes api V1");
-    });
-}
-else 
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
-    });
-} 
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notes api V1");
+});
 
 app.UseHttpsRedirection();
 
@@ -42,13 +52,15 @@ app.UseAuthorization();
 
 app.UseCors(options =>
 {
-    options.WithOrigins("http://localhost:5173", "https://johnnotesapi.azurewebsites.net", "https://notes.johncorrigan.dev");
-    //options.AllowAnyHeader();
-    //options.AllowAnyMethod();
-    //options.AllowAnyOrigin();
+    // before publish use this
+    // options.WithOrigins("https://johnnotesapi.azurewebsites.net", "https://notes.johncorrigan.dev");
+
+    //for local host deving
+    options.AllowAnyHeader();
+    options.AllowAnyMethod();
+    options.AllowAnyOrigin();
 });
 
 app.MapControllers();
 
 app.Run();
-

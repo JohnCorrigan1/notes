@@ -1,43 +1,46 @@
 using Microsoft.AspNetCore.Mvc;
-
+using backend.Exceptions;
 namespace backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class UserController : Controller
 {
-    public List<User> users = new List<User>();
-    public UserController()
+    private IUserService _userService;
+    public UserController(IUserService userService)
     {
-        users.Add(new User { username = "user1", id = 1 });
-        users.Add(new User { username = "user2", id = 2 });
-        users.Add(new User { username = "user3", id = 3 });
+        _userService = userService;
     }
 
-    [HttpGet("users", Name = "GetUsers")]
-    public IEnumerable<User> GetUsers()
+    [HttpGet(Name = "GetUsers")]
+    public async Task<IEnumerable<User>> GetUsers()
     {
-        return users;
+        return await _userService.GetUsers();
     }
 
-    [HttpGet("users/{id}", Name = "GetUser")]
-    public User GetUser(int id)
+    [HttpGet("{id}", Name = "GetUser")]
+    public async Task<User> GetUser(int id)
     {
-        return users.Find(user => user.id == id);
+        return await _userService.GetUser(id);
     }
 
-    [HttpPost("users", Name = "CreateUser")]
-    public User CreateUser(User user)
+    [HttpPost(Name = "CreateUser")]
+    public async Task CreateUser(string username)
     {
-        users.Add(user);
-        return user;
+        await _userService.CreateUser(username);
     }
 
-    [HttpPut("users/{id}", Name = "UpdateUser")]
-    public User UpdateUser(int id, User user)
+    [HttpPut("update", Name = "UpdateUser")]
+    public async Task<IActionResult> UpdateUser(User user)
     {
-        var index = users.FindIndex(user => user.id == id);
-        users[index] = user;
-        return user;
+        try 
+	    { 
+            await _userService.UpdateUser(user);
+            return Ok();
+	    } 
+	    catch (UserNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+	    }
     }
 }
