@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
@@ -30,10 +31,11 @@ await using var con = new NpgsqlConnection(connectionString);
 await con.OpenAsync();
 
 //add to context to use in controllers 
-builder.Services.AddScoped<DB>(_ => new DB(con));
+builder.Services.AddScoped(_ => new DB(con));
 
 //add services to controllers context
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPostService, PostService>();
 
 var app = builder.Build();
 

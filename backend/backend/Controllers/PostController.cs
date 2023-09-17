@@ -1,79 +1,117 @@
-// using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using backend.Exceptions;
 
-// namespace backend.Controllers;
-// [ApiController]
-// [Route("api/[controller]")]
-// public class postController : ControllerBase
-// {
+namespace backend.Controllers;
 
-//     public List<Post> posts = new List<Post>();
-//     public List<User> users = new List<User>();
+[ApiController]
+[Route("api/[controller]")]
+public class PostController : Controller
+{
+    private readonly IPostService _postService;
+    public PostController(IPostService postService)
+    {
+        _postService = postService;
+    }
 
-//     public postController()
-//     {
-//         var OmegaChad = new User { username = "OmegaChad", id = 69 };
-//         var AlphaVirgin = new User { username = "AlphaVirgin", id = 420 };
-//         var BetaVirgin = new User { username = "BetaVirgin", id = 666 };
+    [HttpGet(Name = "GetPosts")]
+    public async Task<IEnumerable<Post>> GetPosts()
+    {
+        return await _postService.GetPosts();
+    }
 
+    [HttpGet("{id}", Name = "GetPost")]
+    public async Task<IActionResult> GetPost(int id)
+    {
+        try
+        {
+            var post = await _postService.GetPostByPostId(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
 
-//         posts.Add(new Post { body = "post1", postedDate = DateTime.Now, likes = 0, author = OmegaChad, comments = new List<Comment>(), id = 1 });
-//         posts.Add(new Post { body = "post2", postedDate = DateTime.Now, likes = 0, author = AlphaVirgin, comments = new List<Comment>(), id = 2 });
-//         posts.Add(new Post { body = "post3", postedDate = DateTime.Now, likes = 0, author = BetaVirgin, comments = new List<Comment>(), id = 3 });
+            return Ok(post);
 
-//     }
+        }
+        catch (UserNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 
-//     [HttpGet("getall", Name = "GetPosts")]
-//     public IEnumerable<Post> GetPosts()
-//     {
-//         return posts;
-//     }
+    [HttpGet("users/{userId}", Name = "GetPostsByUserId")]
+    public async Task<IEnumerable<Post>> GetPostsByUserId(int userId)
+    {
+        return await _postService.GetPostsByUserId(userId);
+    }
 
-//     [HttpGet("get/{id}", Name = "GetPost")]
-//     public Post GetPost(int id)
-//     {
-//         return posts.Find(post => post.id == id);
-//     }
+    [HttpGet("bydate", Name = "GetPostsByDate")]
+    public async Task<IEnumerable<Post>> GetPostsByDate()
+    {
+        return await _postService.GetPostsByDate();
+    }
 
-//     [HttpPost("create", Name = "CreatePost")]
-//     public Post CreatePost(Post post)
-//     {
-//         posts.Add(post);
-//         return post;
-//     }
+    [HttpGet("bylikes", Name = "GetPostsByLikes")]
+    public async Task<IEnumerable<Post>> GetPostsByLikes()
+    {
+        return await _postService.GetPostsByLikes();
+    }
 
-//     [HttpPut("update/{id}", Name = "UpdatePost")]
-//     public Post UpdatePost(int id, Post post)
-//     {
-//         var index = posts.FindIndex(post => post.id == id);
-//         posts[index] = post;
-//         return post;
-//     }
+    [HttpGet("latest", Name = "GetLatestPosts")]
+    public async Task<IEnumerable<Post>> GetLatestPosts()
+    {
+        return await _postService.GetLatestPosts();
+    }
 
-//     [HttpDelete("delete/{id}", Name = "DeletePost")]
-//     public void DeletePost(int id)
-//     {
-//         posts.RemoveAll(post => post.id == id);
-//     }
+    [HttpGet("mostliked", Name = "GetMostLikedPosts")]
+    public async Task<IEnumerable<Post>> GetMostLikedPosts()
+    {
+        return await _postService.GetMostLikedPosts();
+    }
 
-//     [HttpGet("top3", Name = "GetTop5Posts")]
-//     public IEnumerable<Post> GetTop5Posts()
-//     {
-//         return posts.OrderByDescending(post => post.likes).Take(3);
-//     }
+    [HttpPost(Name = "CreatePost")]
+    public async Task CreatePost(Post post)
+    {
+        await _postService.CreatePost(post);
+    }
 
-//     [HttpPost("like/{id}", Name = "LikePost")]
-//     public Post LikePost(int id)
-//     {
-//         var post = posts.Find(post => post.id == id);
-//         post.likes++;
-//         return post;
-//     }
+    [HttpPut("update", Name = "UpdatePost")]
+    public async Task<IActionResult> UpdatePost(Post post)
+    {
+        try
+        {
+            await _postService.UpdatePost(post);
+            return Ok();
+        }
+        catch (UserNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 
-//     [HttpPost("comment/{id}", Name = "CommentPost")]
-//     public Post CommentPost(int id, Comment comment)
-//     {
-//         var post = posts.Find(post => post.id == id);
-//         post.comments.Add(comment);
-//         return post;
-//     }
-// }
+    [HttpDelete("delete/{id}", Name = "DeletePost")]
+    public async Task<IActionResult> DeletePost(int id)
+    {
+        try
+        {
+            await _postService.DeletePost(id);
+            return Ok();
+        }
+        catch (UserNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet("comments/{postId}", Name = "GetCommentsByPostId")]
+    public async Task<IEnumerable<Comment>> GetCommentsByPostId(int postId)
+    {
+        return await _postService.GetCommentsByPostId(postId);
+    }
+
+    [HttpPost("comment", Name = "CreateComment")]
+    public async Task CreateComment(Comment comment)
+    {
+        await _postService.CreateComment(comment);
+    }
+}

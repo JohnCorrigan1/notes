@@ -21,14 +21,14 @@ public class UserService : IUserService
     public async Task<User> GetUser(int id)
     {
         var sql = "SELECT * FROM users WHERE id = @id";
-        var user = await _context.Connection.QueryFirstOrDefaultAsync<User>(sql, new { id = id }) ?? throw new UserNotFoundException("User not found");
+        var user = await _context.Connection.QueryFirstOrDefaultAsync<User>(sql, new { id }) ?? throw new UserNotFoundException("User not found");
         return user;
     }
 
     public async Task CreateUser(string username)
     {
         var sql = "INSERT INTO users (username) VALUES (@username) RETURNING id";
-        await _context.Connection.ExecuteAsync(sql, new { username = username });
+        await _context.Connection.ExecuteAsync(sql, new { username });
 
     }
 
@@ -45,7 +45,7 @@ public class UserService : IUserService
     public async Task DeleteUser(int id)
     {
         var sql = "DELETE FROM users WHERE id = @id RETURNING id";
-        var user = await _context.Connection.ExecuteAsync(sql, new { id = id });
+        var user = await _context.Connection.ExecuteAsync(sql, new { id });
         if (user == 0)
         {
             throw new UserNotFoundException("User not found");

@@ -21,27 +21,14 @@ CREATE TABLE comments (
     post_id integer REFERENCES posts(postId)
 );
 
+INSERT INTO users VALUES (1, 'user1');
+INSERT INTO users VALUES (2, 'user2');
+INSERT INTO users VALUES (3, 'user3');
 
---show the tables
--- give me some example values to add
--- add some values
--- show the values
+INSERT INTO posts VALUES (1, 'My first post', 'This is my first post', '2019-01-01 12:00:00', 0, 1);
+INSERT INTO posts VALUES (2, 'My Second post', 'This is my second post', '2019-01-02 12:00:00', 0, 1);
+INSERT INTO posts VALUES (3, 'My Third post', 'This is my third post', '2019-01-03 12:00:00', 0, 1);
 
-drop table comments;
-drop table posts;
-
-
-use notes-app
-
-insert into users (username) values ('joe');
-insert into users (username) values ('jane');
-insert into users (username) values ('jim');
-
-
-insert into posts (title, body, postedDate, likes, author_id) values ('first post', 'this is my first post', '2020-01-01', 0, 1);
-insert into posts (title, body, postedDate, likes, author_id) values ('second post', 'this is my second post', '2020-01-02', 0, 1);
-insert into posts (title, body, postedDate, likes, author_id) values ('third post', 'this is my third post', '2020-01-03', 0, 2);
-
-insert into comments (body, postedDate, user_id, post_id) values ('this is a comment', '2020-01-01', 1, 1);
-insert into comments (body, postedDate, user_id, post_id) values ('this is another comment', '2020-01-02', 2, 1);
-insert into comments (body, postedDate, user_id, post_id) values ('this is a third comment', '2020-01-03', 1, 2);
+INSERT INTO comments VALUES (1, 'This is my first comment', '2019-01-01 12:00:00', 0, 1, 1);
+INSERT INTO comments VALUES (2, 'This is my second comment', '2019-01-02 12:00:00', 0, 1, 1);
+INSERT INTO comments VALUES (3, 'This is my third comment', '2019-01-03 12:00:00', 0, 1, 1);

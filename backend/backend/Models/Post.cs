@@ -2,12 +2,10 @@ namespace backend;
 
 public class Post
 {
-    public int PostId { get; set; }
+    public int Post_Id { get; set; }
     public required string Title { get; set; }
     public required string Body { get; set; }
-    public DateTime PostedDate { get; set; }
-    public List<Comment> Comments { get; set; }
+    public DateTime Posted_Date { get; set; }
     public int Likes { get; set; }
-    public required int AuthorId { get; set; }
+    public required int Author_Id { get; set; }
 }
-

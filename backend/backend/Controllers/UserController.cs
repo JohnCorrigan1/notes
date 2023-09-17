@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Exceptions;
+
 namespace backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class UserController : Controller
 {
-    private IUserService _userService;
+    private readonly IUserService _userService;
     public UserController(IUserService userService)
     {
         _userService = userService;
@@ -24,12 +25,12 @@ public class UserController : Controller
         try
         {
             var user = await _userService.GetUser(id);
-            if(user == null)
-	        {
-                return NotFound(); 
-	        }
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-           return Ok(user);
+            return Ok(user);
 
         }
         catch (UserNotFoundException ex)
