@@ -15,13 +15,7 @@ public class PostService : IPostService
 
     public async Task<IEnumerable<Post>> GetPosts()
     {
-        var posts = await _context.Connection.QueryAsync<Post>("SELECT * FROM posts");
-        foreach(Post post in posts)
-        {
-            Console.WriteLine(post.Post_Id);
-	    }
-        //return await _context.Connection.QueryAsync<Post>("SELECT * FROM posts");
-        return posts;
+        return await _context.Connection.QueryAsync<Post>("SELECT * FROM posts ORDER BY posted_date DESC") ?? throw new UserNotFoundException("Posts not found");
     }
 
     public async Task<Post> GetPostByPostId(int id)
@@ -84,7 +78,7 @@ public class PostService : IPostService
 
     public async Task DeletePost(int id)
     {
-        var sql = "DELETE FROM posts WHERE post_id = @post_id RETURNING post_id";
+        var sql = "DELETE FROM posts WHERE post_id = @post_id RETURNING id";
         var post = await _context.Connection.ExecuteAsync(sql, new { post_id = id });
         if (post == 0)
         {

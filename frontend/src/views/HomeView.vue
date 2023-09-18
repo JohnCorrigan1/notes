@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import PostContainer from '@/components/PostContainer.vue';
+import About from '../components/About.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <About />
+    <PostContainer />
   </main>
 </template>
