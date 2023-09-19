@@ -7,13 +7,5 @@
                 Notes
             </h1>
         </RouterLink>
-        <ul class="flex items-center space-x-5">
-            <li class="text-xl font-semibold text-white hover:underline cursor-pointer duration-300 active:scale-[.98]">
-                Login
-            </li>
-            <li class="text-xl font-semibold text-white hover:underline cursor-pointer duration-300 active:scale-[.98]">
-                Register
-            </li>
-        </ul>
     </nav>
 </template>
