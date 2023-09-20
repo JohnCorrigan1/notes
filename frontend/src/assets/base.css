@@ -4,7 +4,7 @@
 
 :root {
     scroll-behavior: smooth;
-    --accent: 136, 58, 234;
+    /* --accent: 136, 58, 234;
     --accent-light: 224, 204, 250;
     --accent-dark: 49, 10, 101;
     --accent-gradient: linear-gradient(
@@ -12,10 +12,10 @@
       rgb(var(--accent)),
       rgb(var(--accent-light)) 30%,
       white 60%
-    );
+    ); */
   }
   html {
-    font-family: system-ui, sans-serif;
+    /* font-family: system-ui, sans-serif; */
     background: #13151a;
     background-size: 224px;
   transition:
@@ -25,7 +25,7 @@
     padding: 0;
   }
 
-  code {
+  /* code {
     font-family:
       Menlo,
       Monaco,
@@ -35,12 +35,12 @@
       Bitstream Vera Sans Mono,
       Courier New,
       monospace;
-  }
+  } */
 
 body {
   scroll-behavior: smooth;
   min-height: 100vh;
-  font-family:
+  /* font-family:
     Inter,
     -apple-system,
     BlinkMacSystemFont,
@@ -55,5 +55,5 @@ body {
     sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale; */
 }
