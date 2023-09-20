@@ -14,12 +14,11 @@ const formatedDate = new Date(date!).toLocaleDateString("en-US", {
     day: "numeric"
 })
 
-
 const titleLink = `/${title?.split(" ").join("-").toLowerCase()}`
 </script>
 
 <template>
-    <RouterLink :to="{ name: 'post', params: { post: titleLink, title: title, postId: postId } }">
+    <RouterLink :to="titleLink" :post="{ title, date, postId }">
         <div class="flex flex-col rounded-lg bg-zinc-400 hover:bg-opacity-40 bg-opacity-20 duration-300 cursor-pointer">
             <img :src="cover" :alt="title" class="w-full object-cover rounded-t-lg" />
             <div class="flex flex-col items-center p-5">
