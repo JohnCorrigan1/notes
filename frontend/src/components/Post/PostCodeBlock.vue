@@ -22,14 +22,20 @@ const {
 </script>
 
 <template>
-    <div class="flex flex-col gap-5 py-10">
+    <div class="flex flex-col gap-5 pt-5">
         <div class="hljs p-5 relative">
-
             <button class="absolute top-3 right-3" @click="copyCode"><img src="/copyIcon.svg" alt="Copy"
-                    class="object-cover opacity-50 hover:opacity-100 active:scale-95 duration-200" /></button>
+                    class="object-cover opacity-50 hover:opacity-100 active:scale-95 duration-200 h-6" /></button>
             <highlightjs id="codeBlock" ref="codeBlock" v-code :autodetect="language === ''" :code="code"
                 :language="language">
             </highlightjs>
         </div>
     </div>
 </template>
+
+<style scoped>
+.hljs {
+    border-radius: 10px;
+    overflow: auto;
+}
+</style>

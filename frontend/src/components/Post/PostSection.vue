@@ -8,7 +8,7 @@ const { heading, body } = defineProps({
 </script>
 
 <template>
-    <div class="text-white flex flex-col gap-5">
+    <div class="text-white flex flex-col gap-5 pt-10">
         <h1 class="text-2xl font-semibold">{{ heading }}</h1>
         <p>
             {{ body }}
