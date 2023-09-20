@@ -5,7 +5,8 @@ const { language, code } = defineProps({
     code: String
 })
 const onCode = () => {
-    const gamerCode = document.getElementById("gamerCode") as HTMLCodeElement
+    console.log(language)
+    const gamerCode = document.getElementById("gamerCode")
     console.log(gamerCode)
 }
 
@@ -14,7 +15,7 @@ const onCode = () => {
 <template>
     <div class="flex flex-col gap-5 py-10">
         <code @click="onCode" id="gamerCode" class="bg-slate-700 bg-opacity-30 p-10 rounded-md">
-                                                {{ code }}
-                                            </code>
+                                                        {{ code }}
+                                                    </code>
     </div>
 </template>
