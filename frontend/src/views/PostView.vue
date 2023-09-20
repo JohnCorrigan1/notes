@@ -2,6 +2,7 @@
 import PostHeader from '@/components/Post/PostHeader.vue'
 import PostSection from '@/components/Post/PostSection.vue'
 import PostImage from '@/components/Post/PostImage.vue'
+import PostCodeBlock from '@/components/Post/PostCodeBlock.vue'
 </script>
 
 <template>
@@ -23,6 +24,7 @@ import PostImage from '@/components/Post/PostImage.vue'
             lorem ipsum lorem ipsum lorem ipsum lorem ipsum
             lorem ipsum lorem ipsum lorem ipsum lorem ipsum
             lorem ipsum lorem ipsum lorem ipsum lorem ipsum" />
+            <PostCodeBlock code="const helloWorld = &quot;Hello World!&quot;" language="javascript" />
         </div>
     </main>
     <footer class="h-20 w-full">
