@@ -6,7 +6,7 @@ import PostCodeBlock from '@/components/Post/PostCodeBlock.vue'
 </script>
 
 <template>
-    <main class="text-white w-full h-full flex flex-col items-center pb-10">
+    <main class=" w-full h-full flex flex-col items-center pb-10">
         <div class="w-1/2">
             <PostHeader title="Amazing Title" date="September 19, 2023" author="John Corrigan" cover="/vue.webp" />
             <PostSection heading="Epic Post Section" body="lorem ipsum lorem ipsum lorem ipsum lorem ipsum
@@ -24,7 +24,9 @@ import PostCodeBlock from '@/components/Post/PostCodeBlock.vue'
             lorem ipsum lorem ipsum lorem ipsum lorem ipsum
             lorem ipsum lorem ipsum lorem ipsum lorem ipsum
             lorem ipsum lorem ipsum lorem ipsum lorem ipsum" />
+
             <PostCodeBlock code="const helloWorld = &quot;Hello World!&quot;" language="javascript" />
+            <PostCodeBlock code="const helloWorld = Hello World!" language="javascript" />
         </div>
     </main>
     <footer class="h-20 w-full">
