@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Exceptions;
+using Microsoft.AspNetCore.Components.RenderTree;
 
 namespace backend.Controllers;
 
@@ -14,104 +15,109 @@ public class PostController : Controller
     }
 
     [HttpGet(Name = "GetPosts")]
-    public async Task<IEnumerable<Post>> GetPosts()
+    public async Task<IEnumerable<PostMetaData>> GetPosts()
     {
         return await _postService.GetPosts();
     }
 
-    [HttpGet("{id}", Name = "GetPost")]
-    public async Task<IActionResult> GetPost(int id)
+    [HttpGet("{slug}", Name = "GetPost")]
+    public async Task<IActionResult> GetPost(string slug)
     {
-        try
+        return await _postService.GetPost(slug) switch
         {
-            var post = await _postService.GetPostByPostId(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
+            PostQueryResult post => Ok(post),
+            _ => NotFound()
+        };
+        //     try
+        //     {
+        //         var post = await _postService.GetPostByPostId(id);
+        //         if (post == null)
+        //         {
+        //             return NotFound();
+        //         }
 
-            return Ok(post);
+        //         return Ok(post);
 
-        }
-        catch (UserNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
+        //     }
+        //     catch (UserNotFoundException ex)
+        //     {
+        //         return NotFound(ex.Message);
+        //     }
     }
 
-    [HttpGet("users/{userId}", Name = "GetPostsByUserId")]
-    public async Task<IEnumerable<Post>> GetPostsByUserId(int userId)
-    {
-        return await _postService.GetPostsByUserId(userId);
-    }
+    // [HttpGet("users/{userId}", Name = "GetPostsByUserId")]
+    // public async Task<IEnumerable<Post>> GetPostsByUserId(int userId)
+    // {
+    //     return await _postService.GetPostsByUserId(userId);
+    // }
 
-    [HttpGet("bydate", Name = "GetPostsByDate")]
-    public async Task<IEnumerable<Post>> GetPostsByDate()
-    {
-        return await _postService.GetPostsByDate();
-    }
+    // [HttpGet("bydate", Name = "GetPostsByDate")]
+    // public async Task<IEnumerable<Post>> GetPostsByDate()
+    // {
+    //     return await _postService.GetPostsByDate();
+    // }
 
-    [HttpGet("bylikes", Name = "GetPostsByLikes")]
-    public async Task<IEnumerable<Post>> GetPostsByLikes()
-    {
-        return await _postService.GetPostsByLikes();
-    }
+    // [HttpGet("bylikes", Name = "GetPostsByLikes")]
+    // public async Task<IEnumerable<Post>> GetPostsByLikes()
+    // {
+    //     return await _postService.GetPostsByLikes();
+    // }
 
-    [HttpGet("latest", Name = "GetLatestPosts")]
-    public async Task<IEnumerable<Post>> GetLatestPosts()
-    {
-        return await _postService.GetLatestPosts();
-    }
+    // [HttpGet("latest", Name = "GetLatestPosts")]
+    // public async Task<IEnumerable<Post>> GetLatestPosts()
+    // {
+    //     return await _postService.GetLatestPosts();
+    // }
 
-    [HttpGet("mostliked", Name = "GetMostLikedPosts")]
-    public async Task<IEnumerable<Post>> GetMostLikedPosts()
-    {
-        return await _postService.GetMostLikedPosts();
-    }
+    // [HttpGet("mostliked", Name = "GetMostLikedPosts")]
+    // public async Task<IEnumerable<Post>> GetMostLikedPosts()
+    // {
+    //     return await _postService.GetMostLikedPosts();
+    // }
 
-    [HttpPost(Name = "CreatePost")]
-    public async Task CreatePost(Post post)
-    {
-        await _postService.CreatePost(post);
-    }
+    // [HttpPost(Name = "CreatePost")]
+    // public async Task CreatePost(Post post)
+    // {
+    //     await _postService.CreatePost(post);
+    // }
 
-    [HttpPut("update", Name = "UpdatePost")]
-    public async Task<IActionResult> UpdatePost(Post post)
-    {
-        try
-        {
-            await _postService.UpdatePost(post);
-            return Ok();
-        }
-        catch (UserNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-    }
+    // [HttpPut("update", Name = "UpdatePost")]
+    // public async Task<IActionResult> UpdatePost(Post post)
+    // {
+    //     try
+    //     {
+    //         await _postService.UpdatePost(post);
+    //         return Ok();
+    //     }
+    //     catch (UserNotFoundException ex)
+    //     {
+    //         return NotFound(ex.Message);
+    //     }
+    // }
 
-    [HttpDelete("delete/{id}", Name = "DeletePost")]
-    public async Task<IActionResult> DeletePost(int id)
-    {
-        try
-        {
-            await _postService.DeletePost(id);
-            return Ok();
-        }
-        catch (UserNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-    }
+    // [HttpDelete("delete/{id}", Name = "DeletePost")]
+    // public async Task<IActionResult> DeletePost(int id)
+    // {
+    //     try
+    //     {
+    //         await _postService.DeletePost(id);
+    //         return Ok();
+    //     }
+    //     catch (UserNotFoundException ex)
+    //     {
+    //         return NotFound(ex.Message);
+    //     }
+    // }
 
-    [HttpGet("comments/{postId}", Name = "GetCommentsByPostId")]
-    public async Task<IEnumerable<Comment>> GetCommentsByPostId(int postId)
-    {
-        return await _postService.GetCommentsByPostId(postId);
-    }
+    // [HttpGet("comments/{postId}", Name = "GetCommentsByPostId")]
+    // public async Task<IEnumerable<Comment>> GetCommentsByPostId(int postId)
+    // {
+    //     return await _postService.GetCommentsByPostId(postId);
+    // }
 
-    [HttpPost("comment", Name = "CreateComment")]
-    public async Task CreateComment(Comment comment)
-    {
-        await _postService.CreateComment(comment);
-    }
+    // [HttpPost("comment", Name = "CreateComment")]
+    // public async Task CreateComment(Comment comment)
+    // {
+    //     await _postService.CreateComment(comment);
+    // }
 }

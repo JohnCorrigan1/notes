@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import type { ComponentMapping, Component } from '@/types/types'
+//component imports
 import PostHeader from '@/components/Post/PostHeader.vue'
 import PostSection from '@/components/Post/PostSection.vue'
 import PostImage from '@/components/Post/PostImage.vue'
@@ -10,7 +14,7 @@ import PostListMiddleUl from '@/components/Post/PostListMiddleUl.vue';
 import PostListMiddleOl from '@/components/Post/PostListMiddleOl.vue';
 import PostParagraph from '@/components/Post/PostParagraph.vue';
 
-const componentMapping: any = {
+const componentMapping: ComponentMapping = {
     "PostSection": PostSection,
     "PostImage": PostImage,
     "PostCodeBlock": PostCodeBlock,
@@ -22,112 +26,38 @@ const componentMapping: any = {
     "PostParagraph": PostParagraph
 };
 
-const postData: any = {
-    "title": "Amazing Title",
-    "date": "September 19, 2023",
-    "author": "John Corrigan",
-    "cover": "/vue.webp",
-    "components": [
-        {
-            "component": "PostSection",
-            "props": {
-                "heading": "Epic Post Section",
-                "body": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lo"
-            }
-        },
-        {
-            "component": "PostImage",
-            "props": {
-                "src": "/vue.webp",
-                "caption": "Vue logo made by some cool guy prolly"
-            }
-        }
-    ]
-}
+const route = useRoute();
+
+const slug = route.params.post;
+
+const components = ref<Component[]>([]);
+const title = ref<string>("");
+const date = ref<string>("");
+const author = ref<string>("");
+
+onMounted(() => {
+    fetch(`https://localhost:7010/api/post/${slug}`)
+        .then((res) => res.json())
+        .then((data) => {
+            components.value = JSON.parse(data.components)
+            title.value = data.title
+            date.value = data.postedDate
+            author.value = data.author
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+});
 
 </script>
 
 <template>
     <main class="text-white w-full h-full flex flex-col items-center pb-10">
         <div class="w-1/2">
-            <PostHeader :title="postData.title" :date="postData.date" :author="postData.author" :cover="postData.cover" />
-
-            <component v-for="(component, index) in postData.components" :key="index"
-                :is="componentMapping[component.component]" v-bind="component.props" />
-
-            <!-- <PostSection heading="Epic Post Section" body="lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum 
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum" />
-            <PostImage src="/vue.webp" alt="Vue logo" caption="Vue logo made by some cool guy prolly" />
-            <PostSection heading="Epic Post Section" body="lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum 
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum" />
-
-            <PostCodeBlock code="const helloWorld = &quot;Hello World!&quot;" language="javascript" />
-            <PostCodeBlock code="const helloWorld = Hello World!" language="javascript" />
-            <PostTextAndImage caption="Vue logo made by some cool guy prolly" src="/vue.webp" body="lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum 
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum" />
-
-            <PostSectionUl heading="Epic Post Section"
-                :items="['lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum']" />
-
-            <PostParagraph body="lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum 
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum" />
-
-            <PostSectionOl heading="" subheading="Epic Post subsection"
-                :items="['lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum']" />
-
-            <PostParagraph body="lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum 
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum" />
-
-            <PostListMiddleUl
-                :items="['lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum']" />
-
-            <PostParagraph body="lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum 
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum" />
-
-            <PostListMiddleOl
-                :items="['lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum', 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum']" />
-
-            <PostParagraph body="lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum 
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-            lorem ipsum lorem ipsum lorem ipsum lorem ipsum" /> -->
-
+            <PostHeader :title="title" :date="date" :author="author" />
+            <component v-for="(component, index) in components" :key="index" :is="componentMapping[component.component]"
+                v-bind="component.props" />
         </div>
     </main>
-    <footer class="h-20 w-full">
-
-    </footer>
+    <footer class="h-20 w-full"></footer>
 </template>

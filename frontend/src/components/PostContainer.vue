@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PostPreview from './PostPreview.vue'
 import { onMounted, ref } from 'vue'
-import type { Post } from '@/models/types'
+import type { Post } from '@/types/types'
 
 const posts = ref<Post[]>();
 
