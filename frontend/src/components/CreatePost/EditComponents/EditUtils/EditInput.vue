@@ -1,0 +1,16 @@
+<script setup>
+const { modelValue } = defineProps({
+    modelValue: {
+        type: String,
+        required: true
+    }
+})
+</script>
+
+<template>
+    <div class="flex flex-col gap-1 w-full float-left ">
+        <label class="text-white font-semibold text-xl" for="sectionHeader">Section Header:</label>
+        <input :value="modelValue" @input="$emit('update:modelValue', $event.target?.value)" name="sectionHeader"
+            class="w-80 px-2 py-3 rounded-md" placeholder="Great Section Below" />
+    </div>
+</template>

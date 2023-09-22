@@ -4,14 +4,7 @@ type User = {
   id: number
   username: string
 }
-/*
-This sentence is 50 characters long starting now.
-This sentence is a bit longer than the first one its 60 cha 
-This sentence is even longer than the second one it is 70 characters.
-This sentence will be 10 longer than the third one it is 80 characters long now.
-This sentence will be 10 characters longer than the fourth one it is 90 characters long...
-This sentence will be 10 characters longer than the fifth one it is 100 characters long... sldkfsal
-*/
+
 type PostMetaData = {
   slug: string
   title: string
@@ -54,10 +47,28 @@ type ComponentMapping = {
 
 type Component = {
   component: string
+  editComponent: string
   props: any
 }
 
+type EditComponent = {
+  editComponent: string
+  component: string
+  props: any
+  index: number
+}
+
 type PostSection = {
+  component: 'PostSection'
+  editComponent: 'EditPostSection'
+  props: {
+    heading: string
+    body: string
+  }
+}
+
+type EditPostSection = {
+  editComponent: 'EditPostSection'
   component: 'PostSection'
   props: {
     heading: string
@@ -67,6 +78,16 @@ type PostSection = {
 
 type PostImage = {
   component: 'PostImage'
+  editComponent: 'EditPostImage'
+  props: {
+    src: string
+    caption: string
+  }
+}
+
+type EditPostImage = {
+  editComponent: 'EditPostImage'
+  component: 'PostImage'
   props: {
     src: string
     caption: string
@@ -75,6 +96,16 @@ type PostImage = {
 
 type PostCodeBlock = {
   component: 'PostCodeBlock'
+  editComponent: 'EditPostCodeBlock'
+  props: {
+    code: string
+    language: string
+  }
+}
+
+type EditPostCodeBlock = {
+  editComponent: 'EditPostCodeBlock'
+  component: 'PostCodeBlock'
   props: {
     code: string
     language: string
@@ -82,6 +113,18 @@ type PostCodeBlock = {
 }
 
 type PostTextAndImage = {
+  component: 'PostTextAndImage'
+  editComponnt: 'EditPostTextAndImage'
+  props: {
+    body: string
+    src: string
+    alt: string
+    caption: string
+  }
+}
+
+type EditPostTextAndImage = {
+  editComponent: 'EditPostTextAndImage'
   component: 'PostTextAndImage'
   props: {
     body: string
@@ -93,6 +136,17 @@ type PostTextAndImage = {
 
 type PostSectionUl = {
   component: 'PostSectionUl'
+  editComponent: 'EditPostSectionUl'
+  props: {
+    heading: string
+    subheading: string
+    items: string[]
+  }
+}
+
+type EditPostSectionUl = {
+  editComponent: 'EditPostSectionUl'
+  component: 'PostSectionUl'
   props: {
     heading: string
     subheading: string
@@ -101,6 +155,17 @@ type PostSectionUl = {
 }
 
 type PostSectionOl = {
+  component: 'PostSectionOl'
+  editComponent: 'EditPostSectionOl'
+  props: {
+    heading: string
+    subheading: string
+    items: string[]
+  }
+}
+
+type EditPostSectionOl = {
+  editComponent: 'EditPostSectionOl'
   component: 'PostSectionOl'
   props: {
     heading: string
@@ -111,6 +176,14 @@ type PostSectionOl = {
 
 type PostListMiddleUl = {
   component: 'PostListMiddleUl'
+  editComponent: 'EditPostListMiddleUl'
+  props: {
+    items: string[]
+  }
+}
+
+type EditPostListMiddleUl = {
+  editComponent: 'EditPostListMiddleUl'
   props: {
     items: string[]
   }
@@ -118,12 +191,30 @@ type PostListMiddleUl = {
 
 type PostListMiddleOl = {
   component: 'PostListMiddleOl'
+  editComponent: 'EditPostListMiddleOl'
+  props: {
+    items: string[]
+  }
+}
+
+type EditPostListMiddleOl = {
+  editComponent: 'EditPostListMiddleOl'
+  component: 'PostListMiddleOl'
   props: {
     items: string[]
   }
 }
 
 type PostParagraph = {
+  component: 'PostParagraph'
+  editComponent: 'EditPostParagraph'
+  props: {
+    body: string
+  }
+}
+
+type EditPostParagraph = {
+  editComponent: 'EditPostParagraph'
   component: 'PostParagraph'
   props: {
     body: string
@@ -152,5 +243,16 @@ export type {
   PostListMiddleUl,
   PostListMiddleOl,
   PostParagraph,
+  EditComponent,
+  EditPostSection,
+  EditPostImage,
+  EditPostCodeBlock,
+  EditPostTextAndImage,
+  EditPostSectionUl,
+  EditPostSectionOl,
+  EditPostListMiddleUl,
+  EditPostListMiddleOl,
+  EditPostParagraph,
+  PostMetaData,
   ComponentPreview
 }
