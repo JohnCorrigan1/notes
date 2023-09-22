@@ -1,20 +1,23 @@
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
+import { defineEmits } from 'vue';
 import ComponentPreview from './ComponentPreview.vue';
 import { components } from '@/assets/components';
 
 const { modal } = defineProps({
-    modal: Number
+    modal: Boolean
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'choose']);
 
-const closeModal = () => {
+const chooseComponent = (component: string | null | undefined) => {
+    if (component) {
+        emit('choose', component)
+    }
     emit('close');
 };
 
-const chooseComponent = (component: string) => {
-    console.log(component);
+const closeModal = () => {
+    emit('close');
 };
 
 </script>
@@ -25,7 +28,7 @@ const chooseComponent = (component: string) => {
     <div v-if="modal"
         class="overflow-y-scroll z-[50] rounded-lg w-2/3 h-2/3 max-w-2/3 max-h-2/3 absolute top-[16.67%] right-[16.67%] bg-zinc-200 p-5">
         <div class="grid componentPreviews gap-5">
-            <ComponentPreview @click="chooseComponent" v-for="component in components" :componentPreview="component" />
+            <ComponentPreview v-on:choose="chooseComponent" v-for="component in components" :componentPreview="component" />
         </div>
     </div>
 </template>
@@ -33,6 +36,5 @@ const chooseComponent = (component: string) => {
 <style scoped>
 .componentPreviews {
     grid-template-columns: repeat(3, 1fr);
-    /* grid-template-rows: repeat(250px) */
 }
 </style>
