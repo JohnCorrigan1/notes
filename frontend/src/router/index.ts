@@ -16,9 +16,12 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/admin/howdidufindthis/createpost',
-      name: 'comment',
-      component: () => import('../views/CreatePostView.vue')
+      path: '/admin/howdidufinddis/createpost',
+      name: 'CreatePost',
+      component: () => import('../views/CreatePostView.vue'),
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })
