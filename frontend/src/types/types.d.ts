@@ -130,6 +130,12 @@ type PostParagraph = {
   }
 }
 
+type ComponentPreview = {
+  component: string
+  name: string
+  src: string
+}
+
 export type {
   User,
   Post,
@@ -145,5 +151,6 @@ export type {
   PostSectionOl,
   PostListMiddleUl,
   PostListMiddleOl,
-  PostParagraph
+  PostParagraph,
+  ComponentPreview
 }

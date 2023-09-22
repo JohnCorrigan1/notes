@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import ComponentModal from '@/components/CreatePost/ComponentModal.vue'
 
 const modal = ref(false)
-
-const closeModal = () => {
-    modal.value = false
-}
 
 const openModal = () => {
     modal.value = true
 }
-
 
 </script>
 
@@ -40,11 +36,6 @@ const openModal = () => {
                 </div>
             </div>
         </form>
-        <div v-if="modal" @click="closeModal"
-            class="bg-zinc-900 bg-opacity-60 z-0 absolute top-0 right-0 w-screen h-screen"></div>
-        <div v-if="modal"
-            class="z-[50] rounded-lg w-2/3 h-2/3 max-w-2/3 max-h-2/3 absolute top-[16.67%] right-[16.67%] bg-white">
-
-        </div>
+        <ComponentModal v-on:close="modal = false" :modal="modal" />
     </main>
 </template>
