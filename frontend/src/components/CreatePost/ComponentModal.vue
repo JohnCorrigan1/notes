@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineEmits } from 'vue';
 import ComponentPreview from './ComponentPreview.vue';
 import { components } from '@/assets/components';
 

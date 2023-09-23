@@ -30,23 +30,23 @@ import EditPostSection from '@/components/CreatePost/EditComponents/EditPostSect
 // import EditPostImage from '@/components/CreatePost/EditComponents/EditPostImage.vue'
 // import EditPostCodeBlock from '@/components/CreatePost/EditComponents/EditPostCodeBlock.vue'
 // import EditPostTextAndImage from '@/components/CreatePost/EditComponents/EditPostTextAndImage.vue';
-// import EditPostSectionUl from '@/components/CreatePost/EditComponents/EditPostSectionUl.vue';
+import EditPostSectionUl from '@/components/CreatePost/EditComponents/EditPostSectionUl.vue';
 // import EditPostSectionOl from '@/components/CreatePost/EditComponents/EditPostSectionOl.vue';
 // import EditPostListMiddleUl from '@/components/CreatePost/EditComponents/EditPostListMiddleUl.vue';
 // import EditPostListMiddleOl from '@/components/CreatePost/EditComponents/EditPostListMiddleOl.vue';
-// import EditPostParagraph from '@/components/CreatePost/EditComponents/EditPostParagraph.vue';
+import EditPostParagraph from '@/components/CreatePost/EditComponents/EditPostParagraph.vue';
 
-// const editComponentMapping: ComponentMapping = {
-//     "EditPostSection": EditPostSection,
-//     "EditPostImage": EditPostImage,
-//     "EditPostCodeBlock": EditPostCodeBlock,
-//     "EditPostTextAndImage": EditPostTextAndImage,
-//     "EditPostSectionUl": EditPostSectionUl,
-//     "EditPostSectionOl": EditPostSectionOl,
-//     "EditPostListMiddleUl": EditPostListMiddleUl,
-//     "EditPostListMiddleOl": EditPostListMiddleOl,
-//     "EditPostParagraph": EditPostParagraph
-// };
+const editComponentMapping: ComponentMapping = {
+    "EditPostSection": EditPostSection,
+    //     "EditPostImage": EditPostImage,
+    //     "EditPostCodeBlock": EditPostCodeBlock,
+    //     "EditPostTextAndImage": EditPostTextAndImage,
+    "EditPostSectionUl": EditPostSectionUl,
+    //     "EditPostSectionOl": EditPostSectionOl,
+    //     "EditPostListMiddleUl": EditPostListMiddleUl,
+    //     "EditPostListMiddleOl": EditPostListMiddleOl,
+    "EditPostParagraph": EditPostParagraph
+};
 
 const modal = ref(false);
 
@@ -86,10 +86,8 @@ const addComponent = (component: string) => {
                 <label class="text-white font-semibold text-xl" for="">Content</label>
                 <div id="content" name="content" class="h-full w-2/3 bg-zinc-500 bg-opacity-30 rounded-lg">
                     <EditPostSection />
-                    <EditPostSection />
-                    <EditPostSection />
-                    <!-- <component v-for="(component, index) in editComponents" :key="index" -->
-                    <!-- :is="editComponentMapping[component.component]" v-bind="component.props" /> -->
+                    <component v-for="(component, index) in editComponents" :key="index"
+                        :is="editComponentMapping[component.editComponent]" v-bind="component.props" />
                     <button @click="openModal" type="button"
                         class="w-full h-full min-h-[300px] bg-zinc-300 bg-opacity-30 hover:bg-opacity-50 active:scale-[0.98] duration-300 rounded-lg justify-center items-center flex flex-col">
                         <div class="flex flex-col justify-center items-center">
