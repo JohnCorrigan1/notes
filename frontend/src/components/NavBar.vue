@@ -7,5 +7,11 @@
                 Notes
             </h1>
         </RouterLink>
+        <RouterLink to="/admin/howdidufinddis/createpost">
+            <h2
+                class="opacity-0 text-2xl font-semibold text-white hover:underline cursor-pointer duration-300 active:scale-[.98]">
+                Create
+            </h2>
+        </RouterLink>
     </nav>
 </template>
