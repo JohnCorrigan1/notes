@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ComponentModal from '@/components/CreatePost/ComponentModal.vue'
-import type { ComponentMapping, Component } from '@/types/types'
+import type { ComponentMapping, Component, PostData, PostMetaData } from '@/types/types'
 //edit import components
 import EditPostSection from '@/components/CreatePost/EditComponents/EditPostSection.vue'
 import EditPostImage from '@/components/CreatePost/EditComponents/EditPostImage.vue'
@@ -30,6 +30,26 @@ const title = ref("");
 const slug = ref("");
 
 const editComponents = ref<Component[]>([]);
+
+const postMetaData = ref<PostMetaData>({
+    slug: slug.value,
+    title: title.value,
+    postedDate: "September 23, 2023",
+    cover: "/vue.webp",
+    likes: 0,
+    author: "John Corrigan",
+    tags: []
+});
+
+const postData = ref<PostData>(
+    {
+        title: title.value,
+        date: "September 23, 2023",
+        author: "John Corrigan",
+        cover: "/vue.webp",
+        components: []
+    }
+);
 // { component: "PostSection", editComponent: "EditPostSection", props: { title: title.value, date: Date.now(), author: "John Corrigan", cover: "/vue.webp" } }
 const openModal = () => {
     modal.value = true
