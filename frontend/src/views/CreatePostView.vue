@@ -2,57 +2,35 @@
 import { ref } from 'vue'
 import ComponentModal from '@/components/CreatePost/ComponentModal.vue'
 import type { ComponentMapping, Component } from '@/types/types'
-//component imports
-// import PostSection from '@/components/Post/PostSection.vue'
-// import PostImage from '@/components/Post/PostImage.vue'
-// import PostCodeBlock from '@/components/Post/PostCodeBlock.vue'
-// import PostTextAndImage from '@/components/Post/PostTextAndImage.vue';
-// import PostSectionUl from '@/components/Post/PostSectionUl.vue';
-// import PostSectionOl from '@/components/Post/PostSectionOl.vue';
-// import PostListMiddleUl from '@/components/Post/PostListMiddleUl.vue';
-// import PostListMiddleOl from '@/components/Post/PostListMiddleOl.vue';
-// import PostParagraph from '@/components/Post/PostParagraph.vue';
-
-// const componentMapping: ComponentMapping = {
-//     "PostSection": PostSection,
-//     "PostImage": PostImage,
-//     "PostCodeBlock": PostCodeBlock,
-//     "PostTextAndImage": PostTextAndImage,
-//     "PostSectionUl": PostSectionUl,
-//     "PostSectionOl": PostSectionOl,
-//     "PostListMiddleUl": PostListMiddleUl,
-//     "PostListMiddleOl": PostListMiddleOl,
-//     "PostParagraph": PostParagraph
-// };
-
 //edit import components
 import EditPostSection from '@/components/CreatePost/EditComponents/EditPostSection.vue'
-// import EditPostImage from '@/components/CreatePost/EditComponents/EditPostImage.vue'
-// import EditPostCodeBlock from '@/components/CreatePost/EditComponents/EditPostCodeBlock.vue'
-// import EditPostTextAndImage from '@/components/CreatePost/EditComponents/EditPostTextAndImage.vue';
+import EditPostImage from '@/components/CreatePost/EditComponents/EditPostImage.vue'
+import EditPostCodeBlock from '@/components/CreatePost/EditComponents/EditPostCodeBlock.vue'
+import EditPostTextAndImage from '@/components/CreatePost/EditComponents/EditPostTextAndImage.vue';
 import EditPostSectionUl from '@/components/CreatePost/EditComponents/EditPostSectionUl.vue';
-// import EditPostSectionOl from '@/components/CreatePost/EditComponents/EditPostSectionOl.vue';
-// import EditPostListMiddleUl from '@/components/CreatePost/EditComponents/EditPostListMiddleUl.vue';
-// import EditPostListMiddleOl from '@/components/CreatePost/EditComponents/EditPostListMiddleOl.vue';
+import EditPostSectionOl from '@/components/CreatePost/EditComponents/EditPostSectionOl.vue';
+import EditPostListMiddleUl from '@/components/CreatePost/EditComponents/EditPostListMiddleUl.vue';
+import EditPostListMiddleOl from '@/components/CreatePost/EditComponents/EditPostListMiddleOl.vue';
 import EditPostParagraph from '@/components/CreatePost/EditComponents/EditPostParagraph.vue';
 
 const editComponentMapping: ComponentMapping = {
     "EditPostSection": EditPostSection,
-    //     "EditPostImage": EditPostImage,
-    //     "EditPostCodeBlock": EditPostCodeBlock,
-    //     "EditPostTextAndImage": EditPostTextAndImage,
+    "EditPostImage": EditPostImage,
+    "EditPostCodeBlock": EditPostCodeBlock,
+    "EditPostTextAndImage": EditPostTextAndImage,
     "EditPostSectionUl": EditPostSectionUl,
-    //     "EditPostSectionOl": EditPostSectionOl,
-    //     "EditPostListMiddleUl": EditPostListMiddleUl,
-    //     "EditPostListMiddleOl": EditPostListMiddleOl,
+    "EditPostSectionOl": EditPostSectionOl,
+    "EditPostListMiddleUl": EditPostListMiddleUl,
+    "EditPostListMiddleOl": EditPostListMiddleOl,
     "EditPostParagraph": EditPostParagraph
 };
 
 const modal = ref(false);
+const title = ref("");
+const slug = ref("");
 
 const editComponents = ref<Component[]>([]);
-const savedComponents = ref<Component[]>([]);
-
+// { component: "PostSection", editComponent: "EditPostSection", props: { title: title.value, date: Date.now(), author: "John Corrigan", cover: "/vue.webp" } }
 const openModal = () => {
     modal.value = true
 }
@@ -66,6 +44,37 @@ const addComponent = (component: string) => {
     })
 };
 
+const addPost = () => {
+    console.log(editComponents)
+    // console.log("Adding post");
+    // const componentsArray: Component[] = [];
+    // components.forEach((component, index) => {
+    //     componentsArray.push({
+    //         component: component.getAttribute("data-component") as string,
+    //         props: JSON.parse(props[index].innerHTML)
+    //     })
+    // })
+    // const data = {
+    //     title: title.value,
+    //     slug: slug.value,
+    //     components: JSON.stringify(componentsArray)
+    // }
+    // fetch("https://localhost:7010/api/post", {
+    //     method: "POST",
+    //     headers: {
+    //         "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify(data)
+    // })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //         console.log(data);
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //     })
+}
+
 </script>
 
 <template>
@@ -74,18 +83,20 @@ const addComponent = (component: string) => {
             <div class="flex w-full justify-center gap-10">
                 <div class="flex flex-col gap-1">
                     <label class="text-white font-semibold text-xl" for="title">Title:</label>
-                    <input class="w-80 px-2 py-3 rounded-md" required name="title" placeholder="This is a great title" />
+                    <input v-model="title" class="w-80 px-2 py-3 rounded-md" required name="title"
+                        placeholder="This is a great title" />
                 </div>
                 <div class="flex flex-col gap-1">
                     <label class="text-white font-semibold text-xl" for="slug">Slug:</label>
-                    <input name="slug" class="w-80 px-2 py-3 rounded-md" placeholder="this-is-a-great-slug" />
+                    <input v-model="slug" name="slug" class="w-80 px-2 py-3 rounded-md"
+                        placeholder="this-is-a-great-slug" />
                 </div>
             </div>
 
             <div class="w-full h-full flex flex-col justify-center items-center gap-5">
                 <label class="text-white font-semibold text-xl" for="">Content</label>
                 <div id="content" name="content" class="h-full w-2/3 bg-zinc-500 bg-opacity-30 rounded-lg">
-                    <EditPostSection />
+                    <!-- <EditPostSection /> -->
                     <component v-for="(component, index) in editComponents" :key="index"
                         :is="editComponentMapping[component.editComponent]" v-bind="component.props" />
                     <button @click="openModal" type="button"
@@ -97,7 +108,7 @@ const addComponent = (component: string) => {
                     </button>
                 </div>
                 <div class="w-full flex justify-center items-center">
-                    <button
+                    <button @click="addPost" type="button"
                         class=" min-w-[150px] text-white rounded-lg font-semibold py-2 px-3 bg-blue-500 hover:bg-blue-600 active:scale-[0.97] duration-300">Save</button>
                 </div>
             </div>

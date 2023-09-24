@@ -28,21 +28,20 @@ public class PostController : Controller
             PostQueryResult post => Ok(post),
             _ => NotFound()
         };
-        //     try
-        //     {
-        //         var post = await _postService.GetPostByPostId(id);
-        //         if (post == null)
-        //         {
-        //             return NotFound();
-        //         }
+    }
 
-        //         return Ok(post);
-
-        //     }
-        //     catch (UserNotFoundException ex)
-        //     {
-        //         return NotFound(ex.Message);
-        //     }
+    [HttpPost(Name = "CreatePost")]
+    public async Task<IActionResult> CreatePost(Post post, PostMetaData postMetaData)
+    {
+        try
+        {
+            await _postService.CreatePost(post, postMetaData);
+            return Ok();
+        }
+        catch (UserNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     // [HttpGet("users/{userId}", Name = "GetPostsByUserId")]

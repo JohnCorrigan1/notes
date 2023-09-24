@@ -10,8 +10,8 @@ const sectionHeader = ref("");
 </script>
 
 <template>
-    <EditContainer :label="sectionHeader" type="Section Unordered list">
+    <EditContainer :label="sectionHeader" type="Section Ordered list">
         <EditInput label="Section Header" v-model="sectionHeader" />
-        <EditList label="Bullets" v-model="items" />
+        <EditList label="Steps" v-model="items" />
     </EditContainer>
 </template>

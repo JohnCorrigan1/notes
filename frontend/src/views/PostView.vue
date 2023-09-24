@@ -28,7 +28,7 @@ const componentMapping: ComponentMapping = {
 
 const route = useRoute();
 
-const slug = route.params.post;
+const slug = route.params?.post;
 
 const components = ref<Component[]>([]);
 const title = ref<string>("");
