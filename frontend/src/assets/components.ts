@@ -1,6 +1,57 @@
 import type { ComponentPreview } from '@/types/types'
 
-export const components: ComponentPreview[] = [
+const getMap = () => {
+  const componentProps = new Map<string, any>()
+
+  componentProps.set('PostSection', {
+    heading: '',
+    body: ''
+  })
+
+  componentProps.set('PostImage', {
+    src: '',
+    caption: ''
+  })
+
+  componentProps.set('PostCodeBlock', {
+    language: '',
+    code: ''
+  })
+
+  componentProps.set('PostTextAndImage', {
+    body: '',
+    alt: '',
+    src: '',
+    caption: ''
+  })
+
+  componentProps.set('PostSectionUl', {
+    heading: '',
+    subheading: '',
+    items: []
+  })
+
+  componentProps.set('PostSectionOl', {
+    heading: '',
+    subheading: '',
+    items: []
+  })
+
+  componentProps.set('PostListMiddleUl', {
+    items: []
+  })
+
+  componentProps.set('PostListMiddleOl', {
+    items: []
+  })
+
+  componentProps.set('PostParagraph', {
+    body: ''
+  })
+  return componentProps
+}
+
+const components: ComponentPreview[] = [
   {
     component: 'PostHeader',
     name: 'Header',
@@ -52,3 +103,5 @@ export const components: ComponentPreview[] = [
     src: '/vue.webp'
   }
 ]
+
+export { getMap, components }

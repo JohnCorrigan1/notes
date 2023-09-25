@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import ComponentModal from '@/components/CreatePost/ComponentModal.vue'
 import type { ComponentMapping, Component, PostData, PostMetaData } from '@/types/types'
+import { getMap } from '@/assets/components'
 //edit import components
 import EditPostSection from '@/components/CreatePost/EditComponents/EditPostSection.vue'
 import EditPostImage from '@/components/CreatePost/EditComponents/EditPostImage.vue'
@@ -24,6 +25,8 @@ const editComponentMapping: ComponentMapping = {
     "EditPostListMiddleOl": EditPostListMiddleOl,
     "EditPostParagraph": EditPostParagraph
 };
+
+const componentProps = getMap();
 
 const modal = ref(false);
 const title = ref("");
@@ -50,14 +53,21 @@ const postData = ref<PostData>(
         components: []
     }
 );
-// { component: "PostSection", editComponent: "EditPostSection", props: { title: title.value, date: Date.now(), author: "John Corrigan", cover: "/vue.webp" } }
+
+const test = () => {
+    console.log(postData.value)
+}
+
 const openModal = () => {
     modal.value = true
 }
 
+const propsRef = ref<any>([]);
+
 const addComponent = (component: string) => {
     console.log("Adding component: ", component);
-    editComponents.value.push({
+    propsRef.value.push(componentProps.get(component));
+    postData.value.components.push({
         component: component,
         editComponent: "Edit" + component,
         props: {}
@@ -65,34 +75,18 @@ const addComponent = (component: string) => {
 };
 
 const addPost = () => {
-    console.log(editComponents)
-    // console.log("Adding post");
-    // const componentsArray: Component[] = [];
-    // components.forEach((component, index) => {
-    //     componentsArray.push({
-    //         component: component.getAttribute("data-component") as string,
-    //         props: JSON.parse(props[index].innerHTML)
-    //     })
-    // })
-    // const data = {
-    //     title: title.value,
-    //     slug: slug.value,
-    //     components: JSON.stringify(componentsArray)
-    // }
-    // fetch("https://localhost:7010/api/post", {
-    //     method: "POST",
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify(data)
-    // })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //         console.log(data);
-    //     })
-    //     .catch((err) => {
-    //         console.log(err);
-    //     })
+
+    postMetaData.value.slug = slug.value;
+    postMetaData.value.title = title.value;
+    postData.value.title = title.value;
+
+    postData.value.components.forEach((component: Component, index: number) => {
+        component.props = propsRef.value[index];
+    });
+
+    console.log(postMetaData.value)
+    console.log(postData.value)
+
 }
 
 </script>
@@ -114,16 +108,15 @@ const addPost = () => {
             </div>
 
             <div class="w-full h-full flex flex-col justify-center items-center gap-5">
-                <label class="text-white font-semibold text-xl" for="">Content</label>
+                <label @click="test" class="text-white font-semibold text-xl" for="">Content</label>
                 <div id="content" name="content" class="h-full w-2/3 bg-zinc-500 bg-opacity-30 rounded-lg">
-                    <!-- <EditPostSection /> -->
-                    <component v-for="(component, index) in editComponents" :key="index"
-                        :is="editComponentMapping[component.editComponent]" v-bind="component.props" />
+                    <component v-for="(component, index) in postData.components" :key="index"
+                        :is="editComponentMapping[component.editComponent]" v-model="propsRef[index]" />
+                    <!-- v-bind="component.props" -->
                     <button @click="openModal" type="button"
                         class="w-full h-full min-h-[300px] bg-zinc-300 bg-opacity-30 hover:bg-opacity-50 active:scale-[0.98] duration-300 rounded-lg justify-center items-center flex flex-col">
                         <div class="flex flex-col justify-center items-center">
                             <img name="addComponent" src="/plus.svg" alt="Add content" class="w-10 text-white h-10" />
-                            <!-- <label class="text-lg font-semibold" for="addComponent">New Component</label> -->
                         </div>
                     </button>
                 </div>

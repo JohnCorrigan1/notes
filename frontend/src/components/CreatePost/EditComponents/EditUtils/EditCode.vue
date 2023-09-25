@@ -9,6 +9,8 @@ const { modelValue, label } = defineProps({
         required: true
     }
 });
+
+defineEmits(['update:modelValue']);
 </script>
 
 <template>
