@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import EditInput from './EditInput.vue';
 
 const { modelValue, label } = defineProps({
@@ -9,12 +10,23 @@ const { modelValue, label } = defineProps({
     label: String
 })
 
+const items = ref(modelValue);
+
+const emit = defineEmits(['update:modelValue'])
+
 const addItem = () => {
-    modelValue.push("");
+    items.value.push("");
+    emit('update:modelValue', items.value);
 }
 
 const removeItem = (index: number) => {
-    modelValue.splice(index, 1);
+    items.value.splice(index, 1);
+    emit('update:modelValue', items.value);
+}
+
+const updateItem = (e: any, index: number) => {
+    items.value[index] = e;
+    emit('update:modelValue', items.value);
 }
 
 </script>
@@ -25,7 +37,8 @@ const removeItem = (index: number) => {
         <div class="w-full border-b-2"></div>
         <div class="w-full grid grid-cols-2 gap-5">
             <div v-for="(_, index) in modelValue" :key="index" class="w-full flex items-center justify-center gap-5">
-                <EditInput :label="'Item: ' + (index + 1)" v-model="modelValue[index]" />
+                <EditInput v-on:update:modelValue="updateItem($event, index)" :label="'Item: ' + (index + 1)"
+                    v-model="modelValue[index]" />
                 <button @click="removeItem(index)"
                     class="opacity-60 hover:opacity-100 hover:scale-[1.02] active:scale-[0.97] duration-300"
                     type="button"><img src="/delete.svg" class="w-8 h-8" alt="delete" /></button>

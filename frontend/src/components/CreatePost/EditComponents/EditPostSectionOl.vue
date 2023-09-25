@@ -4,14 +4,31 @@ import EditContainer from './EditUtils/EditContainer.vue';
 import EditInput from './EditUtils/EditInput.vue';
 import EditList from './EditUtils/EditList.vue';
 
-const items = ref<string[]>(["", ""]);
-const sectionHeader = ref("");
+const { modelValue } = defineProps({
+    modelValue: {
+        type: Object as () => { heading: string, items: string[] },
+        required: true
+    }
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const sectionHeader = ref(modelValue.heading)
+const items = ref(modelValue.items)
+
+const updateHeader = (e: any) => {
+    emit('update:modelValue', { heading: e, items: items.value })
+}
+
+const updateItems = (e: any) => {
+    emit('update:modelValue', { heading: sectionHeader.value, items: e })
+}
 
 </script>
 
 <template>
     <EditContainer :label="sectionHeader" type="Section Ordered list">
-        <EditInput label="Section Header" v-model="sectionHeader" />
-        <EditList label="Steps" v-model="items" />
+        <EditInput v-on:update:modelValue="updateHeader" label="Section Header" v-model="sectionHeader" />
+        <EditList v-on:update:modelValue="updateItems" label="Steps" v-model="items" />
     </EditContainer>
 </template>
