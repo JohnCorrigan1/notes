@@ -32,8 +32,6 @@ const modal = ref(false);
 const title = ref("");
 const slug = ref("");
 
-const editComponents = ref<Component[]>([]);
-
 const postMetaData = ref<PostMetaData>({
     slug: slug.value,
     title: title.value,
@@ -54,10 +52,6 @@ const postData = ref<PostData>(
     }
 );
 
-const test = () => {
-    console.log(postData.value)
-}
-
 const openModal = () => {
     modal.value = true
 }
@@ -74,8 +68,7 @@ const addComponent = (component: string) => {
     })
 };
 
-const addPost = () => {
-
+const addPost = async () => {
     postMetaData.value.slug = slug.value;
     postMetaData.value.title = title.value;
     postData.value.title = title.value;
@@ -83,10 +76,21 @@ const addPost = () => {
     postData.value.components.forEach((component: Component, index: number) => {
         component.props = propsRef.value[index];
     });
-
-    console.log(postMetaData.value)
-    console.log(postData.value)
-
+    // console.log(postData.value.components.toString())
+    // return
+    // console.log(JSON.stringify({ postData: postData.value, postMeta: postMetaData.value }));
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ postMeta: postMetaData.value, postData: postData.value })
+        // body: JSON.stringify({ "gamer": "gamer" })
+    };
+    const response = await fetch('https://localhost:7010/api/post', requestOptions)
+    console.log(response)
+    // .then(response => response.json())
+    // .then(data => console.log(data));
 }
 
 </script>
@@ -108,11 +112,10 @@ const addPost = () => {
             </div>
 
             <div class="w-full h-full flex flex-col justify-center items-center gap-5">
-                <label @click="test" class="text-white font-semibold text-xl" for="">Content</label>
+                <label class="text-white font-semibold text-xl" for="">Content</label>
                 <div id="content" name="content" class="h-full w-2/3 bg-zinc-500 bg-opacity-30 rounded-lg">
                     <component v-for="(component, index) in postData.components" :key="index"
                         :is="editComponentMapping[component.editComponent]" v-model="propsRef[index]" />
-                    <!-- v-bind="component.props" -->
                     <button @click="openModal" type="button"
                         class="w-full h-full min-h-[300px] bg-zinc-300 bg-opacity-30 hover:bg-opacity-50 active:scale-[0.98] duration-300 rounded-lg justify-center items-center flex flex-col">
                         <div class="flex flex-col justify-center items-center">
