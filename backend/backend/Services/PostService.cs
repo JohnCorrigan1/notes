@@ -40,13 +40,15 @@ public class PostService : IPostService
         return await _context.Connection.QueryFirstOrDefaultAsync<PostQueryResult>(sql, new { Slug = slug });
     }
 
-    public async Task CreatePost(Post post, PostMetaData postMetaData)
+    //public async Task CreatePost(PostBody postBody)
+    public async Task CreatePost(PostData post, PostMeta postMetaData)
     {
+        
         string sql = @"
         INSERT INTO
-            posts (id, components)
+            posts (components)
         VALUES
-            (@Id, @Components)";
+            (@Components)";
 
         await _context.Connection.ExecuteAsync(sql, post);
 

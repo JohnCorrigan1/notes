@@ -1,3 +1,6 @@
+
+using Newtonsoft.Json.Linq;
+
 namespace backend;
 
 public class Post
@@ -6,6 +9,31 @@ public class Post
     public DateTime date { get; set; }
     public string components { get; set; }
 }
+public class PostData
+{
+    public string title { get; set; }
+    public string date { get; set; }
+    public string author { get; set; }
+    public string cover { get; set; }
+    public JArray components { get; set; }
+}
+public class PostBody
+{
+    public PostMeta postMeta { get; set; }
+    public PostData postData { get; set; }
+}
+
+public class PostMeta
+{
+    public string slug { get; set; }
+    public string title { get; set; }
+    public string postedDate { get; set; }
+    public string cover { get; set; }
+    public int likes { get; set; }
+    public string author { get; set; }
+    public string[] tags { get; set; }
+}
+
 
 public class PostMetaData
 {

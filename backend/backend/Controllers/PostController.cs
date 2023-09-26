@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Exceptions;
-using Microsoft.AspNetCore.Components.RenderTree;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace backend.Controllers;
 
@@ -31,16 +32,31 @@ public class PostController : Controller
     }
 
     [HttpPost(Name = "CreatePost")]
-    public async Task<IActionResult> CreatePost(Post post, PostMetaData postMetaData)
+    public async Task<IActionResult> CreatePost()
     {
+
         try
         {
-            await _postService.CreatePost(post, postMetaData);
-            return Ok();
+            using (StreamReader reader = new StreamReader(HttpContext.Request.Body))
+            {
+                string requestBody = await reader.ReadToEndAsync();
+                var json = JsonConvert.DeserializeObject<PostBody>(requestBody);
+                Console.WriteLine("test");
+                //print everything in json
+
+                //Console.WriteLine(json.postData.components);
+
+                Console.WriteLine(json.postData.title);
+                Console.WriteLine(json.postMeta.slug);
+                //fix this
+                //await _postService.CreatePost(json.postData, json.postMeta);
+                return Ok();
+            }
         }
-        catch (UserNotFoundException ex)
+        catch (Exception e)
         {
-            return NotFound(ex.Message);
+            //return NotFound(ex.Message);
+            return NotFound(e.Message);
         }
     }
 
