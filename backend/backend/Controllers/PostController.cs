@@ -34,30 +34,22 @@ public class PostController : Controller
     [HttpPost(Name = "CreatePost")]
     public async Task<IActionResult> CreatePost()
     {
-
         try
         {
             using (StreamReader reader = new StreamReader(HttpContext.Request.Body))
             {
                 string requestBody = await reader.ReadToEndAsync();
                 var json = JsonConvert.DeserializeObject<PostBody>(requestBody);
-                Console.WriteLine("test");
-                //print everything in json
-
-                //Console.WriteLine(json.postData.components);
-
-                Console.WriteLine(json.postData.title);
-                Console.WriteLine(json.postMeta.slug);
-                //fix this
-                //await _postService.CreatePost(json.postData, json.postMeta);
-                return Ok();
+                await _postService.CreatePost(json);
             }
+            return Ok();
         }
         catch (Exception e)
         {
             //return NotFound(ex.Message);
             return NotFound(e.Message);
         }
+
     }
 
     // [HttpGet("users/{userId}", Name = "GetPostsByUserId")]

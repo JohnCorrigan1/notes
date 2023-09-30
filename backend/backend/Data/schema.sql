@@ -15,7 +15,7 @@ CREATE TABLE postmetadata (
 );
 
 CREATE TABLE posts (
-    id serial PRIMARY KEY REFERENCES postmetadata(id),
+    id SERIAL PRIMARY KEY REFERENCES postmetadata(id),
     date TIMESTAMP NOT NULL,
     components JSONB NOT NULL
 );
@@ -33,7 +33,7 @@ VALUES (1, NOW(), '[
     {"component": "PostSection", "props": {"heading": "Section 1", "body": "This is section 1 content."}},
     {"component": "PostImage", "props": {"src": "/vue.webp", "caption": "Image 1"}},
     {"component": "PostTextAndImage", "props": {"body": "Some text with an image", "src": "/vue.webp", "alt": "Image 2", "caption": "Image 2 caption"}},
-    {"component": "PostCodeBlock", "props": {"code": "console.log('Hello, World!');", "language": "javascript"}},
+    {"component": "PostCodeBlock", "props": {"code": "console.log(''Hello, World!'');", "language": "javascript"}},
     {"component": "PostSectionUl", "props": {"heading": "", "subheading": "Sublist", "items": ["Item 1", "Item 2", "Item 3"]}},
     {"component": "PostParagraph", "props": {"body": "This is a paragraph."}},
     {"component": "PostListMiddleOl", "props": {"items": ["Item A", "Item B", "Item C"]}}
@@ -47,10 +47,8 @@ VALUES (2, NOW(), '[
     {"component": "PostSection", "props": {"heading": "Section 1", "body": "This is section 1 content."}},
     {"component": "PostImage", "props": {"src": "/vue.webp", "caption": "Image 1"}},
     {"component": "PostTextAndImage", "props": {"body": "Some text with an image", "src": "image2.jpg", "alt": "Image 2", "caption": "Image 2 caption"}},
-    {"component": "PostCodeBlock", "props": {"code": "console.log('Hello, World!');", "language": "javascript"}},
+    {"component": "PostCodeBlock", "props": {"code": "console.log(''Hello, World!'');", "language": "javascript"}},
     {"component": "PostSectionUl", "props": {"heading": "List Section", "subheading": "Sublist", "items": ["Item 1", "Item 2", "Item 3"]}},
     {"component": "PostParagraph", "props": {"body": "This is a paragraph."}},
     {"component": "PostListMiddleOl", "props": {"items": ["Item A", "Item B", "Item C"]}}
 ]');
-
-

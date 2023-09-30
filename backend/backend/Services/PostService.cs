@@ -41,23 +41,41 @@ public class PostService : IPostService
     }
 
     //public async Task CreatePost(PostBody postBody)
-    public async Task CreatePost(PostData post, PostMeta postMetaData)
+    public async Task CreatePost(PostBody post)
     {
-        
-        string sql = @"
+        var postData = post.postData;
+        var postMetaData = post.postMeta;
+        try
+        {
+            string sql = @"
         INSERT INTO
-            posts (components)
+            postmetadata (slug, title, postedDate, cover, likes, tags, author_id)
         VALUES
-            (@Components)";
+            (@Slug, @Title, @PostedDate, @Cover, @Likes, @Tags, @AuthorId)";
 
-        await _context.Connection.ExecuteAsync(sql, post);
+            await _context.Connection.ExecuteAsync(sql, new { Slug = postMetaData.slug, Title = postMetaData.title, PostedDate = DateTime.Now, Cover = postMetaData.cover, Likes = postMetaData.likes, Tags = postMetaData.tags, AuthorId = 1 });
+           // sql = "SELECT LAST_INSERT_ID()";
+            //int postId = await _context.Connection.QueryFirstOrDefaultAsync<int>(sql);
+            // string componentsJson = postData.components.ToString();
+            //var componentsJson = ("components", NpgsqlTypes.NpgsqlDbType.Jsonb);
+            //int postMetadataId = await _context.Connection.ExecuteScalarAsync<int>(sql);
 
-        sql = @"
+            var componentsJson = new Npgsql.NpgsqlParameter("components", NpgsqlTypes.NpgsqlDbType.Jsonb);
+            componentsJson.Value = postData.components;
+             sql = @"
         INSERT INTO
-            postmetadata (id, slug, title, postedDate, cover, likes, tags, author_id)
+            posts (date, components)
         VALUES
-            (@Id, @Slug, @Title, @PostedDate, @Cover, @Likes, @Tags, @AuthorId)";
+            (@Date, @Components)";
 
-        await _context.Connection.ExecuteAsync(sql, postMetaData);
+            await _context.Connection.ExecuteAsync(sql, new { Date = DateTime.Now, Components = componentsJson });
+
+            //get last ID 
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
     }
 }
