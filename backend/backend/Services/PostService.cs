@@ -45,37 +45,51 @@ public class PostService : IPostService
     {
         var postData = post.postData;
         var postMetaData = post.postMeta;
-        try
+        using (var transaction = _context.Connection.BeginTransaction())
         {
-            string sql = @"
-        INSERT INTO
-            postmetadata (slug, title, postedDate, cover, likes, tags, author_id)
-        VALUES
-            (@Slug, @Title, @PostedDate, @Cover, @Likes, @Tags, @AuthorId)";
+            try
+            {
+                string sql = @"
+                INSERT INTO
+                    postmetadata (slug, title, postedDate, cover, likes, tags, author_id)
+                VALUES
+                    (@Slug, @Title, @PostedDate, @Cover, @Likes, @Tags, @AuthorId)";
 
-            await _context.Connection.ExecuteAsync(sql, new { Slug = postMetaData.slug, Title = postMetaData.title, PostedDate = DateTime.Now, Cover = postMetaData.cover, Likes = postMetaData.likes, Tags = postMetaData.tags, AuthorId = 1 });
-           // sql = "SELECT LAST_INSERT_ID()";
-            //int postId = await _context.Connection.QueryFirstOrDefaultAsync<int>(sql);
-            // string componentsJson = postData.components.ToString();
-            //var componentsJson = ("components", NpgsqlTypes.NpgsqlDbType.Jsonb);
-            //int postMetadataId = await _context.Connection.ExecuteScalarAsync<int>(sql);
+                await _context.Connection.ExecuteAsync(sql, new
+                {
+                    Slug = postMetaData.slug,
+                    Title = postMetaData.title,
+                    PostedDate = DateTime.Now,
+                    Cover = postMetaData.cover,
+                    Likes = postMetaData.likes,
+                    Tags = postMetaData.tags,
+                    AuthorId = 1
+                }, transaction);
 
-            var componentsJson = new Npgsql.NpgsqlParameter("components", NpgsqlTypes.NpgsqlDbType.Jsonb);
-            componentsJson.Value = postData.components;
-             sql = @"
-        INSERT INTO
-            posts (date, components)
-        VALUES
-            (@Date, @Components)";
+                var lastPostId = await _context.Connection.ExecuteScalarAsync<int>("SELECT last_value FROM postmetadata_id_seq", transaction);
 
-            await _context.Connection.ExecuteAsync(sql, new { Date = DateTime.Now, Components = componentsJson });
+                sql = @"
+                INSERT INTO
+                    posts (id, date, components)
+                VALUES
+                    (@Id, @Date, @Components::jsonb)";
 
-            //get last ID 
+                var param = new
+                {
+                    Id = lastPostId,
+                    Date = DateTime.Now,
+                    Components = Newtonsoft.Json.JsonConvert.SerializeObject(postData.components)
+                };
+
+                await _context.Connection.ExecuteAsync(sql, param, transaction);
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                transaction.Rollback();
+            }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-
+      }
     }
-}
