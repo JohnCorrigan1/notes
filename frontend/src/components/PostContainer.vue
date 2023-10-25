@@ -28,10 +28,7 @@ onMounted(() => {
 
 <template>
     <div class="w-full grid grid-cols-3 p-10 gap-10">
-        <PostPreview title="This is a title" cover="/vue.webp" date="Septemer 17, 2023" />
-        <PostPreview title="This is a title" cover="/vue.webp" date="Septemer 17, 2023" />
-        <PostPreview title="This is a title" cover="/vue.webp" date="Septemer 17, 2023" />
-        <PostPreview v-for="post in posts" :key="post.slug" :title="post.title" cover="/vue.webp" :date="post.postedDate"
-            :id="post.slug" />
+        <PostPreview v-for="post in posts" :key="post.slug" :slug="post.slug" :title="post.title" :cover="post.cover"
+            :date="post.postedDate" :id="post.slug" />
     </div>
 </template>

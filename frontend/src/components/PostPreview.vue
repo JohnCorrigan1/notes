@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 
-const { title, cover, date, postId } = defineProps({
+const { title, cover, date, slug, postId } = defineProps({
     title: String,
     cover: String,
     date: String,
+    slug: String,
     postId: Number,
 })
 
@@ -14,7 +15,7 @@ const formatedDate = new Date(date!).toLocaleDateString("en-US", {
     day: "numeric"
 })
 
-const titleLink = `/${title?.split(" ").join("-").toLowerCase()}`
+const titleLink = `/${slug}`
 </script>
 
 <template>

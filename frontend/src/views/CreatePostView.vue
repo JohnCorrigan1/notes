@@ -31,13 +31,14 @@ const componentProps = getMap();
 const modal = ref(false);
 const title = ref("");
 const slug = ref("");
+const cover = ref("");
 
 const postMetaData = ref<PostMetaData>({
     slug: slug.value,
     title: title.value,
     postedDate: "September 23, 2023",
-    cover: "/vue.webp",
-    likes: 0,
+    cover: cover.value,
+    likes: 1000,
     author: "John Corrigan",
     tags: []
 });
@@ -47,7 +48,7 @@ const postData = ref<PostData>(
         title: title.value,
         date: "September 23, 2023",
         author: "John Corrigan",
-        cover: "/vue.webp",
+        cover: cover.value,
         components: []
     }
 );
@@ -71,26 +72,22 @@ const addComponent = (component: string) => {
 const addPost = async () => {
     postMetaData.value.slug = slug.value;
     postMetaData.value.title = title.value;
+    postMetaData.value.cover = cover.value;
     postData.value.title = title.value;
+    postData.value.cover = cover.value;
 
     postData.value.components.forEach((component: Component, index: number) => {
         component.props = propsRef.value[index];
     });
-    // console.log(postData.value.components.toString())
-    // return
-    // console.log(JSON.stringify({ postData: postData.value, postMeta: postMetaData.value }));
     const requestOptions = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ postMeta: postMetaData.value, postData: postData.value })
-        // body: JSON.stringify({ "gamer": "gamer" })
     };
     const response = await fetch('https://localhost:7010/api/post', requestOptions)
     console.log(response)
-    // .then(response => response.json())
-    // .then(data => console.log(data));
 }
 
 </script>
@@ -108,6 +105,13 @@ const addPost = async () => {
                     <label class="text-white font-semibold text-xl" for="slug">Slug:</label>
                     <input v-model="slug" name="slug" class="w-80 px-2 py-3 rounded-md"
                         placeholder="this-is-a-great-slug" />
+                </div>
+            </div>
+            <div class="flex w-full justify-center items-center">
+                <div class="flex flex-col gap-1">
+                    <label class="text-white font-semibold text-xl" for="cover">Cover image:</label>
+                    <input v-model="cover" name="cover" class="w-80 px-2 py-3 rounded-md"
+                        placeholder="https://www.website.com/myimage.png" />
                 </div>
             </div>
 
