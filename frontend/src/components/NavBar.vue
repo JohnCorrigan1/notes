@@ -4,7 +4,7 @@
     <nav class="flex w-full justify-between p-5">
         <RouterLink to="/">
             <h1 class="text-3xl font-semibold text-white hover:underline cursor-pointer duration-300 active:scale-[.98]">
-                Notes
+                Notes test
             </h1>
         </RouterLink>
         <RouterLink to="/admin/howdidufinddis/createpost">
