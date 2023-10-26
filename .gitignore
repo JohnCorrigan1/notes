@@ -1,2 +1,4 @@
 */appsettings.json
 backend/backend/appsettings.json
+backend/backend/*.json
+appsettings.json
