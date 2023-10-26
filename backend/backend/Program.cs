@@ -24,15 +24,23 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 //database setup
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+string? url = Environment.GetEnvironmentVariable("SupabaseURL");
+string? key = Environment.GetEnvironmentVariable("SupabaseKey");
 //connect
-await using var con = new NpgsqlConnection(connectionString);
-await con.OpenAsync();
-
-//add to context to use in controllers 
-builder.Services.AddScoped(_ => new DB(con));
-
+//await using var con = new NpgsqlConnection(connectionString);
+//await con.OpenAsync();
+var options = new Supabase.SupabaseOptions
+{
+    AutoConnectRealtime = true
+};
+if (url != null && key != null)
+{
+    var supabase = new Supabase.Client(url, key, options);
+    await supabase.InitializeAsync();
+    //add to context to use in controllers 
+    builder.Services.AddScoped(_ => new DB(supabase));
+}
 //add services to controllers context
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
