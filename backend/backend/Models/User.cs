@@ -1,5 +1,6 @@
-using System.ComponentModel.DataAnnotations.Schema;
+//using System.ComponentModel.DataAnnotations.Schema;
 using Postgrest.Attributes;
+using Postgrest.Models;
 
 namespace backend;
 public class User
@@ -8,7 +9,7 @@ public class User
     public required string Username { get; set; }
 }
 [Table("users")]
-public class SupaUser
+public class SupaUser : BaseModel
 {
     [PrimaryKey("id")]
     public int Id { get; set; }

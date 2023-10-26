@@ -2,6 +2,7 @@ using Microsoft.OpenApi.Models;
 using Npgsql;
 using backend;
 using backend.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,23 +25,15 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 //database setup
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-string? url = Environment.GetEnvironmentVariable("SupabaseURL");
-string? key = Environment.GetEnvironmentVariable("SupabaseKey");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 //connect
-//await using var con = new NpgsqlConnection(connectionString);
-//await con.OpenAsync();
-var options = new Supabase.SupabaseOptions
-{
-    AutoConnectRealtime = true
-};
-if (url != null && key != null)
-{
-    var supabase = new Supabase.Client(url, key, options);
-    await supabase.InitializeAsync();
-    //add to context to use in controllers 
-    builder.Services.AddScoped(_ => new DB(supabase));
-}
+await using var con = new NpgsqlConnection(connectionString);
+await con.OpenAsync();
+
+//add to context to use in controllers 
+builder.Services.AddScoped(_ => new DB(con));
+
 //add services to controllers context
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();

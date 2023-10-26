@@ -11,7 +11,8 @@ autom4te.cache/
 tarballs/
 test-results/
 PublishProfiles/
-appsettings.json
+*/appsettings.json
+backend/appsettings.json
 
 
 

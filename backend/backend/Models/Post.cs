@@ -1,4 +1,5 @@
-
+using Postgrest.Attributes;
+using Postgrest.Models;
 using Newtonsoft.Json.Linq;
 
 namespace backend;
@@ -55,5 +56,80 @@ public class PostQueryResult
     public string components { get; set; }
     public DateTime PostedDate { get; set; }
     public int Likes { get; set; }
+    public string Author { get; set; }
+}
+
+public class SupaPostMeta : BaseModel
+{
+    [PrimaryKey("id")]
+    public int Id { get; set; }
+
+    [Column("slug")]
+    public string Slug { get; set; }
+
+    [Column("title")]
+    public string Title { get; set; }
+
+    [Column("posted_date")]
+    public DateTime PostedDate { get; set; }
+
+    [Column("cover")]
+    public string Cover { get; set; }
+
+    [Column("likes")]
+    public int Likes { get; set; }
+
+    [Column("author_id")]
+    public int AuthorId { get; set; }
+
+    [Column("tags")]
+    public string[] Tags { get; set; }
+}
+
+public class SupaPost : BaseModel
+{
+    [PrimaryKey("id")]
+    public int Id { get; set; }
+
+    [Column("slug")]
+    public string Slug { get; set; }
+
+    [Column("title")]
+    public string Title { get; set; }
+
+    [Column("components")]
+    public string Components { get; set; }
+
+    [Column("posted_date")]
+    public DateTime PostedDate { get; set; }
+
+    [Column("likes")]
+    public int Likes { get; set; }
+
+    [Column("author_id")]
+    public int AuthorId { get; set; }
+}
+
+public class SupaPostQueryResult : BaseModel
+{
+    [PrimaryKey("id")]
+    public int Id { get; set; }
+
+    [Column("slug")]
+    public string Slug { get; set; }
+
+    [Column("title")]
+    public string Title { get; set; }
+
+    [Column("components")]
+    public string Components { get; set; }
+
+    [Column("posted_date")]
+    public DateTime PostedDate { get; set; }
+
+    [Column("likes")]
+    public int Likes { get; set; }
+
+    [Column("author")]
     public string Author { get; set; }
 }
