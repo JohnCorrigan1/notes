@@ -56,12 +56,12 @@ app.UseAuthorization();
 app.UseCors(options =>
 {
     // before publish use this
-    // options.WithOrigins("https://johnnotesapi.azurewebsites.net", "https://notes.johncorrigan.dev");
+     options.WithOrigins("https://johnnotesapi.azurewebsites.net", "https://notes.johncorrigan.dev");
 
     //for local host deving
     options.AllowAnyHeader();
     options.AllowAnyMethod();
-    options.AllowAnyOrigin();
+    //options.AllowAnyOrigin();
     //options.AllowCredentials();
 });
 

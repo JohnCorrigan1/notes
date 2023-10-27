@@ -86,7 +86,7 @@ const addPost = async () => {
         },
         body: JSON.stringify({ postMeta: postMetaData.value, postData: postData.value })
     };
-    const response = await fetch('https://localhost:7010/api/post', requestOptions)
+    const response = await fetch('https://johnnotesapi.azurewebsites.net/api/post', requestOptions)
     console.log(response)
 }
 

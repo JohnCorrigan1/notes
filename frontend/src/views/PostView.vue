@@ -36,7 +36,7 @@ const date = ref<string>("");
 const author = ref<string>("");
 
 onMounted(() => {
-    fetch(`https://localhost:7010/api/post/${slug}`)
+    fetch(`https://johnnotesapi.azurewebsites.net/api/post/${slug}`)
         .then((res) => res.json())
         .then((data) => {
             components.value = JSON.parse(data.components)

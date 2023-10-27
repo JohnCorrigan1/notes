@@ -6,7 +6,7 @@ import type { PostMetaData } from '@/types/types'
 const posts = ref<PostMetaData[]>();
 
 const getPosts = async () => {
-    const res = await fetch('https://localhost:7010/api/post')
+    const res = await fetch('https://johnnotesapi.azurewebsites.net/api/post')
     const postsResponse = await res.json()
     return postsResponse as PostMetaData[]
 }
