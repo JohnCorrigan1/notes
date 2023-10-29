@@ -19,12 +19,12 @@ public class UserController : Controller
         return await _userService.GetUsers();
     }
 
-    [HttpGet("{id}", Name = "GetUser")]
-    public async Task<IActionResult> GetUser(int id)
+    [HttpGet("{clerkId}", Name = "GetUser")]
+    public async Task<IActionResult> GetUser(string clerkId)
     {
         try
         {
-            var user = await _userService.GetUser(id);
+            var user = await _userService.GetUser(clerkId);
             if (user == null)
             {
                 return NotFound();
@@ -39,10 +39,17 @@ public class UserController : Controller
         }
     }
 
-    [HttpPost(Name = "CreateUser")]
-    public async Task CreateUser(string username)
+    public class NewUser
     {
-        await _userService.CreateUser(username);
+        public string username { get; set; }
+        public string clerkId { get; set; }
+    } 
+	
+
+    [HttpPost(Name = "CreateUser")]
+    public async Task CreateUser(NewUser user)
+    {
+        await _userService.CreateUser(user.username, user.clerkId);
     }
 
     [HttpPut("update", Name = "UpdateUser")]

@@ -5,9 +5,11 @@ using Postgrest.Models;
 namespace backend;
 public class User
 {
-    public int Id { get; set; }
-    public required string Username { get; set; }
+public int Id { get; set; }
+public required string Username { get; set; }
+public string Clerk_id { get; set; }
 }
+
 [Table("users")]
 public class SupaUser : BaseModel
 {
@@ -16,4 +18,7 @@ public class SupaUser : BaseModel
 
     [Column("username")]
     public string Username { get; set; }
+
+    [Column("clerk_id")]
+    public string ClerkId { get; set; }
 }

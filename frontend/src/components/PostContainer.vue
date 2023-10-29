@@ -6,7 +6,7 @@ import type { PostMetaData } from '@/types/types'
 const posts = ref<PostMetaData[]>();
 
 const getPosts = async () => {
-    const res = await fetch('https://johnnotesapi.azurewebsites.net/api/post')
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}api/post`)
     const postsResponse = await res.json()
     return postsResponse as PostMetaData[]
 }
@@ -22,12 +22,10 @@ onMounted(() => {
             console.log(err)
         })
 });
-
-
 </script>
 
 <template>
-    <div class="w-full grid grid-cols-3 p-10 gap-10">
+    <div class="w-full grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 p-10 gap-10">
         <PostPreview v-for="post in posts" :key="post.slug" :slug="post.slug" :title="post.title" :cover="post.cover"
             :date="post.postedDate" :id="post.slug" />
     </div>

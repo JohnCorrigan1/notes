@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { useAuth, useClerk } from 'vue-clerk'
+import { onMounted } from 'vue'
+import { dark } from '@clerk/themes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,12 +21,26 @@ const router = createRouter({
     {
       path: '/admin/howdidufinddis/createpost',
       name: 'CreatePost',
-      component: () => import('../views/CreatePostView.vue')
-      // meta: {
-      // requiresAuth: true
-      // }
+      component: () => import('../views/CreatePostView.vue'),
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const { isSignedIn } = useAuth()
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (isSignedIn.value) {
+      next() 
+    } else {
+      const clerk = useClerk()
+      clerk.openSignIn({appearance: dark})
+    }
+  } else {
+    next() 
+    }
 })
 
 export default router

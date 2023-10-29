@@ -18,18 +18,17 @@ public class UserService : IUserService
         return await _context.Connection.QueryAsync<User>("SELECT * FROM users");
     }
 
-    public async Task<User> GetUser(int id)
+    public async Task<User> GetUser(string clerk_id)
     {
-        var sql = "SELECT * FROM users WHERE id = @id";
-        var user = await _context.Connection.QueryFirstOrDefaultAsync<User>(sql, new { id }) ?? throw new UserNotFoundException("User not found");
+        var sql = "SELECT * FROM users WHERE clerk_id = @clerk_id";
+        var user = await _context.Connection.QueryFirstOrDefaultAsync<User>(sql, new { clerk_id }) ?? throw new UserNotFoundException("User not found");
         return user;
     }
 
-    public async Task CreateUser(string username)
+    public async Task CreateUser(string username, string clerk_id)
     {
-        var sql = "INSERT INTO users (username) VALUES (@username) RETURNING id";
-        await _context.Connection.ExecuteAsync(sql, new { username });
-
+        var sql = "INSERT INTO users (username, clerk_id) VALUES (@username, @clerk_id) RETURNING id";
+        await _context.Connection.ExecuteAsync(sql, new { username, clerk_id });
     }
 
     public async Task UpdateUser(User user)

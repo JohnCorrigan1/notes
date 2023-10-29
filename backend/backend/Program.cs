@@ -2,12 +2,9 @@ using Microsoft.OpenApi.Models;
 using Npgsql;
 using backend;
 using backend.Models;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -38,12 +35,21 @@ builder.Services.AddScoped(_ => new DB(con));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
 
+// CORS setup
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        //builder.WithOrigins("https://johnnotesapi.azurewebsites.net", "https://notes.johncorrigan.dev")
+        builder.AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 app.UseSwagger();
-//using swagger page in dev and prod envs for now
-//can add if statement to only use swagger ui in dev env
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notes api V1");
@@ -53,17 +59,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseCors(options =>
-{
-    // before publish use this
-     options.WithOrigins("https://johnnotesapi.azurewebsites.net", "https://notes.johncorrigan.dev");
+app.UseRouting();
 
-    //for local host deving
-    options.AllowAnyHeader();
-    options.AllowAnyMethod();
-    //options.AllowAnyOrigin();
-    //options.AllowCredentials();
-});
+app.UseCors();
 
 app.MapControllers();
 

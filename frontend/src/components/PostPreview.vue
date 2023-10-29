@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 
-const { title, cover, date, slug, postId } = defineProps({
+const { title, cover, date, slug } = defineProps({
     title: String,
     cover: String,
     date: String,
@@ -9,7 +9,7 @@ const { title, cover, date, slug, postId } = defineProps({
     postId: Number,
 })
 
-const formatedDate = new Date(date!).toLocaleDateString("en-US", {
+const formattedDate = new Date(date!).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric"
@@ -24,7 +24,7 @@ const titleLink = `/${slug}`
             <img :src="cover" :alt="title" class="w-full object-cover rounded-t-lg" />
             <div class="flex flex-col items-center p-5">
                 <h3 class="text-xl font-semibold">{{ title }}</h3>
-                <p class="text-gray-500">{{ formatedDate }}</p>
+                <p class="text-gray-500">{{ formattedDate }}</p>
             </div>
         </div>
     </RouterLink>

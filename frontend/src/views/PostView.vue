@@ -36,18 +36,32 @@ const date = ref<string>("");
 const author = ref<string>("");
 
 onMounted(() => {
-    fetch(`https://johnnotesapi.azurewebsites.net/api/post/${slug}`)
+    fetch(`https://localhost:7010/api/post/${slug}`)
+        //fetch(`https://johnnotesapi.azurewebsites.net/api/post/${slug}`)
         .then((res) => res.json())
         .then((data) => {
             components.value = JSON.parse(data.components)
             title.value = data.title
-            date.value = data.postedDate
+            date.value = formatDate(data.postedDate)
             author.value = data.author
         })
         .catch((err) => {
             console.log(err);
         })
 });
+
+const formatDate = (date: string) => {
+    const dateReal = date?.replace('T', ' ').replace('-', '/');
+    return new Date(dateReal!).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    }).toString();
+}
+
+
+
+
 
 </script>
 

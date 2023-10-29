@@ -1,22 +1,23 @@
 CREATE TABLE users (
     id serial PRIMARY KEY,
-    username VARCHAR(255) NOT NULL
+    username TEXT NOT NULL
+    clerk_id TEXT NOT NULL
 );
 
 CREATE TABLE postmetadata (
   id SERIAL PRIMARY KEY,
-  slug VARCHAR(255) UNIQUE NOT NULL,
-  title VARCHAR(255) NOT NULL,
+  slug text UNIQUE NOT NULL,
+  title text NOT NULL,
   postedDate DATE NOT NULL,
-  cover VARCHAR(255) NOT NULL,
+  cover text NOT NULL,
   likes INTEGER NOT NULL,
-  tags VARCHAR[],
+  tags text[],
   author_id INTEGER NOT NULL REFERENCES users(id)
 );
 
 CREATE TABLE posts (
     id SERIAL PRIMARY KEY REFERENCES postmetadata(id),
-    date TIMESTAMP NOT NULL,
+    date DATE NOT NULL,
     components JSONB NOT NULL
 );
 
