@@ -31,6 +31,12 @@ public class PostController : Controller
         };
     }
 
+    [HttpGet("{clerk_id}", Name = "GetUserPosts")]
+    public async Task<IEnumerable<PostMetaData>> GetUserPosts(string clerk_id) 
+    {
+        return await _postService.GetUserPosts(clerk_id); 
+    }
+
     [HttpPost(Name = "CreatePost")]
     public async Task<IActionResult> CreatePost()
     {

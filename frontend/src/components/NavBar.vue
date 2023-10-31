@@ -21,19 +21,27 @@ const profileProps = { appearance: dark };
                 Notes
             </h1>
         </RouterLink>
-        <div class="flex gap-5 items-ceneter">
+        <div class="flex gap-5 items-center">
+
+            <RouterLink to="/admin">
+                <button
+                    class="text-xl font-semibold text-white hover:bg-zinc-600 cursor-pointer duration-300 active:scale-[.98] bg-zinc-700 bg-opacity-80 px-3 py-2 rounded-lg">
+                    My Posts
+                </button>
+            </RouterLink>
             <UserButton v-if="isSignedIn" after-sign-out-url="/" :appearance="dark" :user-profile-props="profileProps" />
             <button v-else
                 class="text-xl font-semibold text-white hover:underline cursor-pointer duration-300 active:scale-[.98]"
                 @click="signIn">
                 Sign in
             </button>
-            <RouterLink to="/admin/howdidufinddis/createpost">
-                <h2
-                    class="opacity-0 text-2xl font-semibold text-white hover:underline cursor-pointer duration-300 active:scale-[.98]">
-                    Create
-                </h2>
-            </RouterLink>
         </div>
     </nav>
 </template>
+
+<style>
+.cl-avatarBox {
+    width: 48px;
+    height: 48px;
+}
+</style>

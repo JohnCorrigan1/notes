@@ -40,6 +40,14 @@ public class PostService : IPostService
         return await _context.Connection.QueryFirstOrDefaultAsync<PostQueryResult>(sql, new { Slug = slug });
     }
 
+    public async Task<IEnumerable<PostMetaData>> GetUserPosts(string clerk_id)
+    {
+        string sql = "select * from postmetadata";
+
+        //return await _context.Connection.QuerytAsync<PostMetaData>(sql, new { clerk_id });
+        return await _context.Connection.QueryAsync<PostMetaData>(sql);
+    }
+
     //public async Task CreatePost(PostBody postBody)
     public async Task CreatePost(PostBody post)
     {
