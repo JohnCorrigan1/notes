@@ -5,12 +5,11 @@ import { dark } from "@clerk/themes";
 const { isSignedIn } = useAuth();
 const clerk = useClerk();
 
-
-
 const signIn = () => {
+    //@ts-ignore
     clerk.openSignIn({ appearance: dark });
 };
-
+//@ts-ignore
 const profileProps = { appearance: dark };
 </script>
 

@@ -33,6 +33,7 @@ public class PostMeta
     public int likes { get; set; }
     public string author { get; set; }
     public string[] tags { get; set; }
+    public bool live { get; set; }
 }
 
 
@@ -46,6 +47,7 @@ public class PostMetaData
     public string likes { get; set; }
     public string[] tags { get; set; }
     public int authorId { get; set; }
+    public bool live { get; set; }
 }
 
 public class PostQueryResult
@@ -84,6 +86,9 @@ public class SupaPostMeta : BaseModel
 
     [Column("tags")]
     public string[] Tags { get; set; }
+
+    [Column("live")]
+    public bool Live { get; set; }
 }
 
 public class SupaPost : BaseModel

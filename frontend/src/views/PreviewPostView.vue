@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { watch, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { ComponentMapping, Component } from '@/types/types'
+import { useUser } from 'vue-clerk'
 
 //component imports
 import PostHeader from '@/components/Post/PostHeader.vue'
@@ -36,8 +37,10 @@ const title = ref<string>("");
 const date = ref<string>("");
 const author = ref<string>("");
 
-onMounted(() => {
-    fetch(`${import.meta.env.VITE_BASE_URL}api/post/${slug}`)
+const isLoading = ref(useUser().isLoaded);
+
+const getPost = async (clerkId: string) => {
+    await fetch(`${import.meta.env.VITE_BASE_URL}api/post/preview/${clerkId}/${slug}`)
         .then((res) => res.json())
         .then((data) => {
             components.value = JSON.parse(data.components)
@@ -45,11 +48,20 @@ onMounted(() => {
             date.value = formatDate(data.postedDate)
             author.value = data.author
         })
-        .catch((err) => {
-            console.log(err);
+        .catch(() => {
             postFound.value = false;
         })
-});
+}
+
+watch(isLoading, async () => {
+    const user = useUser();
+    try {
+        await getPost(user.user.value!.id)
+    } catch {
+        console.log("not found");
+    }
+}, { immediate: true }
+);
 
 const formatDate = (date: string) => {
     const dateReal = date?.replace('T', ' ').replace('-', '/');

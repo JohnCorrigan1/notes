@@ -14,7 +14,7 @@ public class PostService : IPostService
 
     public async Task<IEnumerable<PostMetaData>> GetPosts()
     {
-        return await _context.Connection.QueryAsync<PostMetaData>("SELECT * FROM  postmetadata");
+        return await _context.Connection.QueryAsync<PostMetaData>("SELECT * FROM  postmetadata where live = true");
     }
 
     public async Task<PostQueryResult> GetPost(string slug)
@@ -35,20 +35,47 @@ public class PostService : IPostService
         INNER JOIN
             users u ON pm.author_id = u.id
         WHERE
-            pm.slug = @Slug";
+            pm.slug = @Slug and pm.live = true";
 
         return await _context.Connection.QueryFirstOrDefaultAsync<PostQueryResult>(sql, new { Slug = slug });
     }
 
-    public async Task<IEnumerable<PostMetaData>> GetUserPosts(string clerk_id)
+    public async Task<PostQueryResult> PreviewPost(string clerk_id, string slug)
     {
-        string sql = "select * from postmetadata";
+        string sql = @"
+        SELECT
+            p.id,
+            pm.slug,
+            pm.title,
+            p.components, 
+            pm.postedDate,
+            pm.likes,
+            u.username AS author
+        FROM
+            postmetadata pm
+        INNER JOIN
+            posts p ON pm.id = p.id
+        INNER JOIN
+            users u ON pm.author_id = u.id
+        WHERE
+            pm.slug = @Slug and u.clerk_id = @Clerk_Id";
 
-        //return await _context.Connection.QuerytAsync<PostMetaData>(sql, new { clerk_id });
-        return await _context.Connection.QueryAsync<PostMetaData>(sql);
+        return await _context.Connection.QueryFirstOrDefaultAsync<PostQueryResult>(sql, new { Slug = slug, Clerk_Id = clerk_id });
     }
 
-    //public async Task CreatePost(PostBody postBody)
+    public async Task<IEnumerable<PostMetaData>> GetUserPosts(string clerk_id)
+    {
+        string sql = @"
+	    SELECT * from
+            postmetadata pm
+        INNER JOIN
+            users u ON pm.author_id = u.id
+        WHERE
+            u.clerk_id = @Clerk_Id";
+
+        return await _context.Connection.QueryAsync<PostMetaData>(sql, new { Clerk_Id = clerk_id });
+    }
+
     public async Task CreatePost(PostBody post)
     {
         var postData = post.postData;

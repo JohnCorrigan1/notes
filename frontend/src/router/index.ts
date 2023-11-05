@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import { useAuth, useClerk } from 'vue-clerk'
-import { onMounted } from 'vue'
+import { useAuth, useClerk, useUser } from 'vue-clerk'
+import { watch, ref } from 'vue'
 import { dark } from '@clerk/themes'
 
 const router = createRouter({
@@ -16,18 +16,34 @@ const router = createRouter({
       path: '/:post',
       name: 'post',
       component: () => import('../views/PostView.vue'),
-      props: true
+//      props: true
     },
     {
-        path: '/admin',
-        name: 'Admin',
-        component: () => import('../views/ManagePosts.vue'),
+        path: '/admin/:post/preview',
+            name: 'PreviewPost',
+        component: () => import('../views/PreviewPostView.vue'),
         meta: {
             requiresAuth: true
-        }
+            }
     },
     {
-      path: '/admin/howdidufinddis/createpost',
+        path: '/admin/:post/edit',
+            name: 'EditPost',
+        component: () => import('../views/EditPostView.vue'),
+        meta: {
+            requiresAuth: true
+            }
+    },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: () => import('../views/ManagePosts.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/admin/createpost',
       name: 'CreatePost',
       component: () => import('../views/CreatePostView.vue'),
       meta: {
@@ -37,18 +53,32 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeResolve(async (to, from, next) => {
   const { isSignedIn } = useAuth()
+  const isLoading = ref(useUser().isLoaded)
+  if (!isLoading.value) {
+    await new Promise<void>((resolve) => {
+      const unsubscribe = watch(isLoading, (value) => {
+        if (value) {
+          unsubscribe()
+          resolve()
+        }
+      })
+    })
+  }
+
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (isSignedIn.value) {
-      next() 
+      next()
     } else {
       const clerk = useClerk()
-      clerk.openSignIn({appearance: dark})
+      // @ts-ignore
+      clerk.openSignIn({ appearance: dark, afterSignInUrl: '/admin' })
+      next({ name: 'Home' })
     }
   } else {
-    next() 
-    }
+    next()
+  }
 })
 
 export default router

@@ -13,6 +13,7 @@ type PostMetaData = {
   likes: number
   author: string
   tags: string[]
+  live: boolean
 }
 
 type Post = {
