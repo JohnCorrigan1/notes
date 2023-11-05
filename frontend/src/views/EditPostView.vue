@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useUser } from 'vue-clerk'
 import ComponentModal from '@/components/CreatePost/ComponentModal.vue'
 import type { ComponentMapping, Component, PostData, PostMetaData } from '@/types/types'
 import { getMap } from '@/assets/components'
@@ -32,7 +33,12 @@ const modal = ref(false);
 const title = ref("");
 const slug = ref("");
 const cover = ref("");
+const postMetaData = ref<PostMetaData>();
+const postData = ref<PostData>();
+const postFound = ref<boolean>(true);
 
+
+/*
 const postMetaData = ref<PostMetaData>({
     slug: slug.value,
     title: title.value,
@@ -42,7 +48,7 @@ const postMetaData = ref<PostMetaData>({
     author: "John Corrigan",
     tags: [],
     live: false
-});
+}); 
 
 const postData = ref<PostData>(
     {
@@ -52,6 +58,31 @@ const postData = ref<PostData>(
         cover: cover.value,
         components: []
     }
+); 
+*/
+
+const isLoading = ref(useUser().isLoaded);
+
+const getPost = async (clerkId: string) => {
+    await fetch(`${import.meta.env.VITE_BASE_URL}api/post/preview/${clerkId}/${slug}`)
+        .then((res) => res.json())
+        .then((data) => {
+            postMetaData.value = data.postMeta;
+            postData.value = data.postData;
+        })
+        .catch(() => {
+            postFound.value = false;
+        })
+}
+
+watch(isLoading, async () => {
+    const user = useUser();
+    try {
+        await getPost(user.user.value!.id)
+    } catch {
+        console.log("not found");
+    }
+}, { immediate: true }
 );
 
 const openModal = () => {
@@ -63,13 +94,13 @@ const propsRef = ref<any>([]);
 const addComponent = (component: string) => {
     console.log("Adding component: ", component);
     propsRef.value.push(componentProps.get(component));
-    postData.value.components.push({
+    postData.value?.components.push({
         component: component,
         editComponent: "Edit" + component,
         props: {}
     })
 };
-
+/*
 const addPost = async () => {
     postMetaData.value.slug = slug.value;
     postMetaData.value.title = title.value;
@@ -90,6 +121,7 @@ const addPost = async () => {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/post`, requestOptions)
     console.log(response)
 }
+*/
 
 </script>
 
@@ -129,7 +161,7 @@ const addPost = async () => {
                     </button>
                 </div>
                 <div class="w-full flex justify-center items-center">
-                    <button @click="addPost" type="button"
+                    <button type="button"
                         class=" min-w-[150px] text-white rounded-lg font-semibold py-2 px-3 bg-blue-500 hover:bg-blue-600 active:scale-[0.97] duration-300">Save</button>
                 </div>
             </div>

@@ -63,6 +63,34 @@ public class PostService : IPostService
         return await _context.Connection.QueryFirstOrDefaultAsync<PostQueryResult>(sql, new { Slug = slug, Clerk_Id = clerk_id });
     }
 
+    public async Task<EditPostData> EditPostData(string clerk_id, string slug)
+    {
+        string sql = @"
+select
+  pm.slug,
+  pm.title,
+  pm.posteddate,
+  pm.cover,
+  pm.likes,
+  pm.live,
+  pm.tags,
+  u.username,
+  p.components
+from 
+  postmetadata pm
+JOIN 
+  posts p ON pm.id = p.id
+INNER join
+  users u ON pm.author_id = u.id
+WHERE 
+  u.clerk_id = @Clerk_Id and pm.slug = @Slug
+        ";
+
+
+        return await _context.Connection.QueryFirstOrDefaultAsync<EditPostData>(sql, new { Slug = slug, Clerk_Id = clerk_id });
+
+    }    
+
     public async Task<IEnumerable<PostMetaData>> GetUserPosts(string clerk_id)
     {
         string sql = @"

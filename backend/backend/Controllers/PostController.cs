@@ -45,6 +45,12 @@ public class PostController : Controller
         };
     }
 
+    [HttpGet("edit/{clerk_id}/{slug}", Name = "EditPost")]
+    public async Task<IActionResult> EditPost(string clerk_id, string slug)
+    {
+        return await _postService.EditPostData(clerk_id, slug); 
+    }
+
 
     [HttpPost(Name = "CreatePost")]
     public async Task<IActionResult> CreatePost()

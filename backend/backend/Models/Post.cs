@@ -138,3 +138,16 @@ public class SupaPostQueryResult : BaseModel
     [Column("author")]
     public string Author { get; set; }
 }
+
+public class EditPostData 
+{
+    public string slug { get; set; }
+    public string title { get; set; }
+    public string posteddate { get; set; }
+    public string cover { get; set; }
+    public int likes { get; set; }
+    public bool live { get; set; }
+    public string[] tags { get; set; }
+    public string username { get; set; }  
+    public JArray components { get; set; }
+}
