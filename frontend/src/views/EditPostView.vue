@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useUser } from 'vue-clerk'
 import ComponentModal from '@/components/CreatePost/ComponentModal.vue'
 import type { ComponentMapping, Component, PostData, PostMetaData } from '@/types/types'
@@ -36,39 +37,47 @@ const cover = ref("");
 const postMetaData = ref<PostMetaData>();
 const postData = ref<PostData>();
 const postFound = ref<boolean>(true);
-
-
-/*
-const postMetaData = ref<PostMetaData>({
-    slug: slug.value,
-    title: title.value,
-    postedDate: "September 23, 2023",
-    cover: cover.value,
-    likes: 1000,
-    author: "John Corrigan",
-    tags: [],
-    live: false
-}); 
-
-const postData = ref<PostData>(
-    {
-        title: title.value,
-        date: "September 23, 2023",
-        author: "John Corrigan",
-        cover: cover.value,
-        components: []
-    }
-); 
-*/
+const route = useRoute();
+const currentSlug = route.params.post;
+const user = useUser();
+const realId = user.user.value!.id;
 
 const isLoading = ref(useUser().isLoaded);
 
 const getPost = async (clerkId: string) => {
-    await fetch(`${import.meta.env.VITE_BASE_URL}api/post/preview/${clerkId}/${slug}`)
+    await fetch(`${import.meta.env.VITE_BASE_URL}api/post/edit/${clerkId}/${currentSlug}`)
         .then((res) => res.json())
         .then((data) => {
-            postMetaData.value = data.postMeta;
-            postData.value = data.postData;
+            postMetaData.value = {
+                slug: data.slug,
+                title: data.title,
+                postedDate: data.posteddate,
+                cover: data.cover,
+                likes: data.likes,
+                author: data.username,
+                tags: data.tags,
+                live: data.live
+            };
+            postData.value = {
+                title: data.title,
+                date: data.posteddate,
+                author: data.username,
+                cover: data.cover,
+                components: []
+            };
+
+            title.value = data.title;
+            slug.value = data.slug;
+            cover.value = data.cover;
+
+            JSON.parse(data.components).forEach((component: Component) => {
+                postData.value?.components.push({
+                    component: component.component,
+                    editComponent: component.editComponent,
+                    props: component.props
+                });
+                propsRef.value.push(component.props);
+            });
         })
         .catch(() => {
             postFound.value = false;
@@ -100,8 +109,13 @@ const addComponent = (component: string) => {
         props: {}
     })
 };
-/*
-const addPost = async () => {
+
+const updatePost = async () => {
+    console.log("yes")
+    if (!postMetaData.value || !postData.value) {
+        console.log("no");
+        return;
+    }
     postMetaData.value.slug = slug.value;
     postMetaData.value.title = title.value;
     postMetaData.value.cover = cover.value;
@@ -112,16 +126,16 @@ const addPost = async () => {
         component.props = propsRef.value[index];
     });
     const requestOptions = {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ postMeta: postMetaData.value, postData: postData.value })
     };
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/post`, requestOptions)
+
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/post/update/${realId}/${currentSlug}`, requestOptions)
     console.log(response)
 }
-*/
 
 </script>
 
@@ -151,7 +165,7 @@ const addPost = async () => {
             <div class="w-full h-full flex flex-col justify-center items-center gap-5">
                 <label class="text-white font-semibold text-xl" for="">Content</label>
                 <div id="content" name="content" class="h-full w-2/3 bg-zinc-500 bg-opacity-30 rounded-lg">
-                    <component v-for="(component, index) in postData.components" :key="index"
+                    <component v-if="postData" v-for="(component, index) in postData.components" :key="index"
                         :is="editComponentMapping[component.editComponent]" v-model="propsRef[index]" />
                     <button @click="openModal" type="button"
                         class="w-full h-full min-h-[300px] bg-zinc-300 bg-opacity-30 hover:bg-opacity-50 active:scale-[0.98] duration-300 rounded-lg justify-center items-center flex flex-col">
@@ -161,7 +175,7 @@ const addPost = async () => {
                     </button>
                 </div>
                 <div class="w-full flex justify-center items-center">
-                    <button type="button"
+                    <button @click="updatePost" type="button"
                         class=" min-w-[150px] text-white rounded-lg font-semibold py-2 px-3 bg-blue-500 hover:bg-blue-600 active:scale-[0.97] duration-300">Save</button>
                 </div>
             </div>

@@ -86,6 +86,7 @@ const addPost = async () => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ postMeta: postMetaData.value, postData: postData.value })
+
     };
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/post`, requestOptions)
     console.log(response)

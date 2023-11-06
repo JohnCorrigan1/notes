@@ -48,9 +48,12 @@ public class PostController : Controller
     [HttpGet("edit/{clerk_id}/{slug}", Name = "EditPost")]
     public async Task<IActionResult> EditPost(string clerk_id, string slug)
     {
-        return await _postService.EditPostData(clerk_id, slug); 
+        return await _postService.EditPostData(clerk_id, slug) switch
+        {
+            EditPostData post => Ok(post),
+            _ => NotFound()
+        };
     }
-
 
     [HttpPost(Name = "CreatePost")]
     public async Task<IActionResult> CreatePost()
@@ -61,14 +64,34 @@ public class PostController : Controller
             {
                 string requestBody = await reader.ReadToEndAsync();
                 var json = JsonConvert.DeserializeObject<PostBody>(requestBody);
-                await _postService.CreatePost(json);
+                await _postService.CreatePost(json!);
+                return Ok();
             }
-            return Ok();
         }
         catch (Exception e)
         {
             return NotFound(e.Message);
         }
 
+    }
+
+
+    [HttpPut("update/{clerk_id}/{slug}", Name = "UpdatePost")]
+    public async Task<IActionResult> UpdatePost(string clerk_id, string slug)
+    {
+        try
+        {
+            using (StreamReader reader = new StreamReader(HttpContext.Request.Body))
+            {
+                string body = await reader.ReadToEndAsync();
+                var postData = JsonConvert.DeserializeObject<EditPostData>(body);
+                await _postService.UpdatePost(clerk_id, slug, postData);
+                return Ok();
+            }
+	    }	catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return NotFound(ex.Message);
+	    } 
     }
 }

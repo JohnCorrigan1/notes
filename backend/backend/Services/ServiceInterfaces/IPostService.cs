@@ -8,4 +8,5 @@ public interface IPostService
     Task<PostQueryResult> PreviewPost(string clerk_id, string slug);
     Task<EditPostData> EditPostData(string clerk_id, string slug);
     Task CreatePost(PostBody post);
+    Task UpdatePost(string clerk_id, string slug, EditPostData postData);
 }

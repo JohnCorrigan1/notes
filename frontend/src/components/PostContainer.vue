@@ -14,9 +14,7 @@ const getPosts = async () => {
 onMounted(() => {
     getPosts()
         .then((postList) => {
-            console.log(postList)
             posts.value = postList as PostMetaData[]
-            console.log(posts.value)
         })
         .catch((err) => {
             console.log(err)
