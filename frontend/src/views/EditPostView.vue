@@ -130,7 +130,17 @@ const updatePost = async () => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ postMeta: postMetaData.value, postData: postData.value })
+        body: JSON.stringify({
+            slug: slug.value,
+            title: title.value,
+            posteddate: postMetaData.value.postedDate,
+            cover: cover.value,
+            likes: postMetaData.value.likes,
+            live: false,
+            tags: [],
+            username: postMetaData.value.author,
+            components: postData.value.components
+        })
     };
 
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/post/update/${realId}/${currentSlug}`, requestOptions)

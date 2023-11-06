@@ -64,7 +64,7 @@ public class PostService : IPostService
         return await _context.Connection.QueryFirstOrDefaultAsync<PostQueryResult>(sql, new { Slug = slug, Clerk_Id = clerk_id });
     }
 
-    public async Task<EditPostData> EditPostData(string clerk_id, string slug)
+    public async Task<EditPostDataStr> EditPostData(string clerk_id, string slug)
     {
         string sql = @"
         select
@@ -86,7 +86,7 @@ public class PostService : IPostService
         WHERE 
             u.clerk_id = @Clerk_Id and pm.slug = @Slug";
 
-        return await _context.Connection.QueryFirstOrDefaultAsync<EditPostData>(sql, new { Slug = slug, Clerk_Id = clerk_id });
+        return await _context.Connection.QueryFirstOrDefaultAsync<EditPostDataStr>(sql, new { Slug = slug, Clerk_Id = clerk_id });
     }    
 
     public async Task<IEnumerable<PostMetaData>> GetUserPosts(string clerk_id)
@@ -156,6 +156,8 @@ public class PostService : IPostService
 
     public async Task UpdatePost(string clerk_id, string slug, EditPostData postData)
     {
+
+        Console.WriteLine("slug: ", postData.slug);
         using (var scope = new TransactionScope())
         {
             // Update postmetadata table
@@ -184,12 +186,11 @@ public class PostService : IPostService
                 ClerkId = clerk_id,
                 OldSlug = slug 
             });
-            Console.WriteLine("first one done??");
 
             // Update posts table
-            string sql2 = "UPDATE posts SET components = @NewComponents WHERE id = (SELECT id FROM postmetadata WHERE slug = @OldSlug)";
-            await _context.Connection.ExecuteAsync(sql2, new { NewComponents = postData.components, OldSlug = slug });
-            Console.WriteLine("second one");
+            string sql2 = "UPDATE posts SET components = @NewComponents::jsonb WHERE id = (SELECT id FROM postmetadata WHERE slug = @OldSlug)";
+            await _context.Connection.ExecuteAsync(sql2, new { NewComponents = Newtonsoft.Json.JsonConvert.SerializeObject(postData.components), OldSlug = slug });
+
             scope.Complete();
         }
         //   string sql = @"

@@ -50,7 +50,7 @@ public class PostController : Controller
     {
         return await _postService.EditPostData(clerk_id, slug) switch
         {
-            EditPostData post => Ok(post),
+            EditPostDataStr post => Ok(post),
             _ => NotFound()
         };
     }
