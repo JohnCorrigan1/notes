@@ -72,7 +72,6 @@ router.beforeResolve(async (to, from, next) => {
       next()
     } else {
       const clerk = useClerk()
-      // @ts-ignore
       clerk.openSignIn({ appearance: dark, afterSignInUrl: '/admin' })
       next({ name: 'Home' })
     }

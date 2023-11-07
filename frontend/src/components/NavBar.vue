@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { useClerk, useAuth, UserButton } from 'vue-clerk'
 import { dark } from "@clerk/themes";
 
@@ -6,10 +6,9 @@ const { isSignedIn } = useAuth();
 const clerk = useClerk();
 
 const signIn = () => {
-    //@ts-ignore
     clerk.openSignIn({ appearance: dark });
 };
-//@ts-ignore
+
 const profileProps = { appearance: dark };
 </script>
 
