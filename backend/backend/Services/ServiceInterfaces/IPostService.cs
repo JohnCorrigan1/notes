@@ -10,4 +10,5 @@ public interface IPostService
     Task CreatePost(PostBody post);
     Task UpdatePost(string clerk_id, string slug, EditPostData postData);
     Task UpdatePostStatus(string clerk_id, string slug, bool publish);
+    Task DeletePost(string clerk_id, string slug);
 }

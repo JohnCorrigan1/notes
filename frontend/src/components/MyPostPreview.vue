@@ -46,6 +46,17 @@ const unpublish = async () => {
     console.log(res);
 }
 
+const deletePost = async () => {
+    const clerkId = user.user.value!.id;
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}api/post/delete/${clerkId}/${slug}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        },
+    })
+    console.log(res);
+}
+
 const titleLink = `/admin/${slug}/preview`
 </script>
 
@@ -71,7 +82,7 @@ const titleLink = `/admin/${slug}/preview`
                 hover:bg-emerald-600 active:scale-[.98] duration-300">Publish</button>
                 <button @click="unpublish" v-else class=" rounded-lg text-zinc-200 font-semibold w-20 text-center py-2 bg-rose-500
                 hover:bg-rose-600 active:scale-[.98] duration-300">Hide</button>
-                <button class=" rounded-lg text-zinc-200 font-semibold w-20 text-center py-2 bg-rose-500
+                <button @click="deletePost" class=" rounded-lg text-zinc-200 font-semibold w-20 text-center py-2 bg-rose-500
                 hover:bg-rose-600 active:scale-[.98] duration-300">Delete</button>
             </div>
         </div>

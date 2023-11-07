@@ -118,4 +118,18 @@ public class PostController : Controller
             return NotFound(ex.Message);
 	    } 
     }
+
+    [HttpDelete("delete/{clerk_id}/{slug}", Name = "DeletePost")]
+    public async Task<IActionResult> DeletePost(string clerk_id, string slug)
+    {
+	    try
+        {
+            await _postService.DeletePost(clerk_id, slug);
+            return Ok(); 
+	    } catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return NotFound(ex.Message);
+	    }
+    }
 }

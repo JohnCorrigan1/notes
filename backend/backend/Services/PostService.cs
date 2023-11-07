@@ -1,6 +1,7 @@
 using System.Transactions;
 using backend.Models;
 using Dapper;
+using Microsoft.AspNetCore.Routing;
 
 namespace backend;
 
@@ -217,4 +218,48 @@ public class PostService : IPostService
         });
     }
 
+    public async Task DeletePost(string clerk_id, string slug)
+    {
+        string getId = @"SELECT id from postmetadata
+                WHERE slug = @Slug
+                AND author_id = (SELECT id FROM users WHERE clerk_id = @ClerkId)";
+
+        int postId = await _context.Connection.ExecuteScalarAsync<int>(getId, new
+        {
+            Slug = slug,
+            ClerkId = clerk_id
+        });
+
+        using (var transaction = _context.Connection.BeginTransaction())
+        {
+            try
+            {
+                string sql = @"
+                DELETE FROM posts
+                WHERE id = @Id"; 
+
+                await _context.Connection.ExecuteAsync(sql, new
+                {
+                    Id = postId
+                }, transaction);
+
+                string sql2 = @"
+                DELETE FROM postmetadata
+                WHERE id = @Id 
+                ";
+                
+                await _context.Connection.ExecuteAsync(sql2, new {
+		            Id = postId 
+		        }, transaction);
+                Console.WriteLine($"cya: {postId}");
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                transaction.Rollback();
+            }
+        }
+    }
 }
