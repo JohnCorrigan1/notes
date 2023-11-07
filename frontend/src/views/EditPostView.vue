@@ -42,6 +42,8 @@ const currentSlug = route.params.post;
 const user = useUser();
 const realId = user.user.value!.id;
 
+const updating = ref(false);
+
 const isLoading = ref(useUser().isLoaded);
 
 const getPost = async (clerkId: string) => {
@@ -111,11 +113,10 @@ const addComponent = (component: string) => {
 };
 
 const updatePost = async () => {
-    console.log("yes")
     if (!postMetaData.value || !postData.value) {
-        console.log("no");
         return;
     }
+    updating.value = true;
     postMetaData.value.slug = slug.value;
     postMetaData.value.title = title.value;
     postMetaData.value.cover = cover.value;
@@ -144,6 +145,7 @@ const updatePost = async () => {
     };
 
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/post/update/${realId}/${currentSlug}`, requestOptions)
+    updating.value = false;
     console.log(response)
 }
 
@@ -186,10 +188,18 @@ const updatePost = async () => {
                 </div>
                 <div class="w-full flex justify-center items-center">
                     <button @click="updatePost" type="button"
-                        class=" min-w-[150px] text-white rounded-lg font-semibold py-2 px-3 bg-blue-500 hover:bg-blue-600 active:scale-[0.97] duration-300">Save</button>
+                        :class="[updating ? 'cursor-not-allowed bg-opacity-40' : 'cursor-pointer']"
+                        class=" flex justify-center items-center min-w-[150px] text-white rounded-lg font-semibold py-2 px-3 bg-blue-500 hover:bg-blue-600 active:scale-[0.97] duration-300">
+                        <div v-if="updating" class="animate-spin h-6 w-6 rounded-full  border-b-2 border-t-2 border-r-2 border-t-white border-r-white
+                            border-b-white border-l-2 border-l-gray-500 opacity-70 ">
+                        </div>
+                        <span v-else>Update</span>
+                    </button>
                 </div>
             </div>
         </form>
         <ComponentModal v-on:choose="addComponent" v-on:close="modal = false" :modal="modal" />
     </main>
 </template>
+
+<style scoped></style>

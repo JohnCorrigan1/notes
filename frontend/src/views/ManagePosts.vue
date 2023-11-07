@@ -28,6 +28,7 @@ watch(isLoading, async () => {
             } else {
                 draftPosts.value.push(post);
             }
+            console.log(post.live)
         })
     }
 }, { immediate: true }
@@ -49,7 +50,7 @@ watch(isLoading, async () => {
                     </div>
                     <div v-else class="w-full grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 p-10 gap-10">
                         <MyPostPreview v-for="post in livePosts" :key="post.slug" :slug="post.slug" :title="post.title"
-                            :cover="post.cover" :date="post.postedDate" :id="post.slug" />
+                            :live="true" :cover="post.cover" :date="post.postedDate" :id="post.slug" />
                     </div>
                 </section>
                 <section class="">
@@ -58,8 +59,8 @@ watch(isLoading, async () => {
                         <p class="text-lg font-semibold text-slate-500">No live posts...</p>
                     </div>
                     <div v-else class="w-full grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 p-10 gap-10">
-                        <MyPostPreview v-for="post in draftPosts" :key="post.slug" :slug="post.slug" :title="post.title"
-                            :cover="post.cover" :date="post.postedDate" :id="post.slug" />
+                        <MyPostPreview v-for="post in  draftPosts " :key="post.slug" :slug="post.slug" :title="post.title"
+                            :live="false" :cover="post.cover" :date="post.postedDate" :id="post.slug" />
                     </div>
                 </section>
             </div>

@@ -94,4 +94,28 @@ public class PostController : Controller
             return NotFound(ex.Message);
 	    } 
     }
+
+    public class Live 
+    {
+	    public bool live { get; set; }
+    };
+
+    [HttpPut("publish/{clerk_id}/{slug}", Name = "UpdatePostStatus")]
+    public async Task<IActionResult> UpdatePostStatus(string clerk_id, string slug)
+    {
+	    try
+        {
+	        using (StreamReader reader = new StreamReader(HttpContext.Request.Body))
+            {
+                string body = await reader.ReadToEndAsync();
+                Live publish = JsonConvert.DeserializeObject<Live>(body);
+                await _postService.UpdatePostStatus(clerk_id, slug, publish.live);
+                return Ok(); 
+	        } 
+	    } catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return NotFound(ex.Message);
+	    } 
+    }
 }

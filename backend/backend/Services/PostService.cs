@@ -156,24 +156,23 @@ public class PostService : IPostService
 
     public async Task UpdatePost(string clerk_id, string slug, EditPostData postData)
     {
-
-        Console.WriteLine("slug: ", postData.slug);
-        using (var scope = new TransactionScope())
+        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
             // Update postmetadata table
             string sql1 = @"
-        UPDATE postmetadata 
-        SET 
-            slug = @NewSlug,
-            title = @NewTitle,
-            posteddate = @NewPostedDate,
-            cover = @NewCover,
-            likes = @NewLikes,
-            live = @NewLive,
-            tags = @NewTags
-        WHERE 
-            author_id = (SELECT id FROM users WHERE clerk_id = @ClerkId) 
-            AND slug = @OldSlug";
+            UPDATE postmetadata 
+            SET 
+                slug = @NewSlug,
+                title = @NewTitle,
+                posteddate = @NewPostedDate,
+                cover = @NewCover,
+                likes = @NewLikes,
+                live = @NewLive,
+                tags = @NewTags
+            WHERE 
+                author_id = (SELECT id FROM users WHERE clerk_id = @ClerkId) 
+                AND slug = @OldSlug";
+
             await _context.Connection.ExecuteAsync(sql1, new
             {
                 NewSlug = postData.slug,
@@ -189,43 +188,33 @@ public class PostService : IPostService
 
             // Update posts table
             string sql2 = "UPDATE posts SET components = @NewComponents::jsonb WHERE id = (SELECT id FROM postmetadata WHERE slug = @OldSlug)";
-            await _context.Connection.ExecuteAsync(sql2, new { NewComponents = Newtonsoft.Json.JsonConvert.SerializeObject(postData.components), OldSlug = slug });
+            await _context.Connection.ExecuteAsync(sql2, 
+		        new { 
+		             NewComponents = Newtonsoft.Json.JsonConvert.SerializeObject(postData.components),
+		             OldSlug = postData.slug
+		      });
 
             scope.Complete();
         }
-        //   string sql = @"
-        //   UPDATE 
-        //       postmetadata pm 
-        //   JOIN 
-        //       users u ON u.id = pm.author_id 
-        //   JOIN
-        //       posts p ON p.id = pm.id
-        //   SET
-        //       pm.slug = @NewSlug,
-        //       pm.title = @NewTitle,
-        //       pm.posteddate = @NewPostedDate,
-        //       pm.cover = @NewCover,
-        //       pm.likes = @NewLikes,
-        //       pm.live = @NewLive,
-        //       pm.tags = @NewTags,
-        //       p.components = @NewComponents
-        //   WHERE 
-        //       u.clerk_id = @ClerkId and pm.slug = @OldSlug
-        //";
-
-        //   await _context.Connection.ExecuteAsync(sql, new
-        //   {
-        //       NewSlug = postData.slug,
-        //       NewTitle = postData.title,
-        //       NewPostedDate = postData.posteddate,
-        //       NewCover = postData.cover,
-        //       NewLikes = postData.likes,
-        //       NewLive = postData.live,
-        //       NewTags = postData.tags,
-        //       NewComponents = Newtonsoft.Json.JsonConvert.SerializeObject(postData.components),
-        //       ClerkId = clerk_id,
-        //       OldSlug = slug
-        //   });
-        //return Ok();
     }
+    
+    public async Task UpdatePostStatus(string clerk_id, string slug, bool publish)
+    {
+        string sql = @"
+            UPDATE postmetadata
+            SET
+                live = @Live
+            WHERE
+            author_id = (SELECT id FROM users WHERE clerk_id = @ClerkId)
+            and slug = @Slug
+        ";
+
+        await _context.Connection.ExecuteAsync(sql, new
+        {
+            Live = publish,
+            ClerkId = clerk_id,
+            Slug = slug,
+        });
+    }
+
 }

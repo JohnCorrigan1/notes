@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
+import { useUser } from 'vue-clerk';
+const user = useUser();
 
 const { title, cover, date, slug } = defineProps({
     title: String,
@@ -7,6 +9,7 @@ const { title, cover, date, slug } = defineProps({
     date: String,
     slug: String,
     postId: Number,
+    live: Boolean,
 })
 
 const formattedDate = new Date(date!).toLocaleDateString("en-US", {
@@ -14,6 +17,34 @@ const formattedDate = new Date(date!).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric"
 })
+
+const publish = async () => {
+    const clerkId = user.user.value!.id;
+    await fetch(`${import.meta.env.VITE_BASE_URL}api/post/publish/${clerkId}/${slug}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            live: true
+        })
+    })
+}
+
+const unpublish = async () => {
+    const clerkId = user.user.value!.id;
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}api/post/publish/${clerkId}/${slug}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            live: false
+        })
+    })
+
+    console.log(res);
+}
 
 const titleLink = `/admin/${slug}/preview`
 </script>
@@ -33,6 +64,15 @@ const titleLink = `/admin/${slug}/preview`
                     active:scale-[.98] duration-300">
                     Edit
                 </RouterLink>
+
+            </div>
+            <div class="flex gap-5 pt-5">
+                <button @click="publish" v-if="live == false" class=" rounded-lg text-zinc-200 font-semibold w-20 text-center py-2 bg-emerald-500
+                hover:bg-emerald-600 active:scale-[.98] duration-300">Publish</button>
+                <button @click="unpublish" v-else class=" rounded-lg text-zinc-200 font-semibold w-20 text-center py-2 bg-rose-500
+                hover:bg-rose-600 active:scale-[.98] duration-300">Hide</button>
+                <button class=" rounded-lg text-zinc-200 font-semibold w-20 text-center py-2 bg-rose-500
+                hover:bg-rose-600 active:scale-[.98] duration-300">Delete</button>
             </div>
         </div>
     </div>
