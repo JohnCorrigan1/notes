@@ -32,6 +32,8 @@ const modal = ref(false);
 const title = ref("");
 const slug = ref("");
 const cover = ref("");
+const uploading = ref(false);
+const errored = ref(false);
 
 const postMetaData = ref<PostMetaData>({
     slug: slug.value,
@@ -71,11 +73,19 @@ const addComponent = (component: string) => {
 };
 
 const addPost = async () => {
+    uploading.value = true;
     postMetaData.value.slug = slug.value;
     postMetaData.value.title = title.value;
     postMetaData.value.cover = cover.value;
     postData.value.title = title.value;
     postData.value.cover = cover.value;
+
+    if (postMetaData.value.slug == "" || postMetaData.value.title == "") {
+        alert("Please fill required fields");
+        uploading.value = false;
+        errored.value = true;
+        return;
+    }
 
     postData.value.components.forEach((component: Component, index: number) => {
         component.props = propsRef.value[index];
@@ -90,6 +100,11 @@ const addPost = async () => {
     };
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}api/post`, requestOptions)
     console.log(response)
+    uploading.value = false;
+}
+
+const removeError = () => {
+    errored.value = false;
 }
 
 </script>
@@ -100,13 +115,13 @@ const addPost = async () => {
             <div class="flex w-full justify-center gap-10">
                 <div class="flex flex-col gap-1">
                     <label class="text-white font-semibold text-xl" for="title">Title:</label>
-                    <input v-model="title" class="w-80 px-2 py-3 rounded-md" required name="title"
-                        placeholder="This is a great title" />
+                    <input @click="removeError" v-model="title" class="w-80 px-2 py-3 rounded-md" required name="title"
+                        :class="[errored ? 'border-red-500 border-4' : '']" placeholder="This is a great title" />
                 </div>
                 <div class="flex flex-col gap-1">
                     <label class="text-white font-semibold text-xl" for="slug">Slug:</label>
-                    <input v-model="slug" name="slug" class="w-80 px-2 py-3 rounded-md"
-                        placeholder="this-is-a-great-slug" />
+                    <input @click="removeError" v-model="slug" name="slug" class="w-80 px-2 py-3 rounded-md"
+                        :class="[errored ? 'border-red-500 border-4' : '']" placeholder="this-is-a-great-slug" />
                 </div>
             </div>
             <div class="flex w-full justify-center items-center">
@@ -131,7 +146,13 @@ const addPost = async () => {
                 </div>
                 <div class="w-full flex justify-center items-center">
                     <button @click="addPost" type="button"
-                        class=" min-w-[150px] text-white rounded-lg font-semibold py-2 px-3 bg-blue-500 hover:bg-blue-600 active:scale-[0.97] duration-300">Save</button>
+                        :class="[uploading ? 'cursor-not-allowed bg-opacity-40' : 'cursor-pointer']"
+                        class=" flex justify-center items-center min-w-[150px] text-white rounded-lg font-semibold py-2 px-3 bg-blue-500 hover:bg-blue-600 active:scale-[0.97] duration-300">
+                        <div v-if="uploading" class="animate-spin h-6 w-6 rounded-full  border-b-2 border-t-2 border-r-2 border-t-white border-r-white
+                            border-b-white border-l-2 border-l-gray-500 opacity-70 ">
+                        </div>
+                        <span v-else>Create Post</span>
+                    </button>
                 </div>
             </div>
         </form>
