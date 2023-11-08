@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { defineProps, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useUser } from 'vue-clerk';
-const user = useUser();
 
 const { title, cover, date, slug } = defineProps({
     title: String,
@@ -11,6 +11,9 @@ const { title, cover, date, slug } = defineProps({
     postId: Number,
     live: Boolean,
 })
+
+const user = useUser();
+const modal = ref(false);
 
 const formattedDate = new Date(date!).toLocaleDateString("en-US", {
     year: "numeric",
@@ -54,7 +57,16 @@ const deletePost = async () => {
             "Content-Type": "application/json"
         },
     })
+    modal.value = false;
     console.log(res);
+}
+
+const confirmDelete = () => {
+    modal.value = true;
+}
+
+const closeModal = () => {
+    modal.value = false;
 }
 
 const titleLink = `/admin/${slug}/preview`
@@ -82,8 +94,22 @@ const titleLink = `/admin/${slug}/preview`
                 hover:bg-emerald-600 active:scale-[.98] duration-300">Publish</button>
                 <button @click="unpublish" v-else class=" rounded-lg text-zinc-200 font-semibold w-20 text-center py-2 bg-rose-500
                 hover:bg-rose-600 active:scale-[.98] duration-300">Hide</button>
-                <button @click="deletePost" class=" rounded-lg text-zinc-200 font-semibold w-20 text-center py-2 bg-rose-500
+                <button @click="confirmDelete" class=" rounded-lg text-zinc-200 font-semibold w-20 text-center py-2 bg-rose-500
                 hover:bg-rose-600 active:scale-[.98] duration-300">Delete</button>
+            </div>
+        </div>
+    </div>
+    <div v-if="modal" @click="closeModal" class="bg-zinc-900 bg-opacity-60 z-0 fixed top-0 right-0 w-screen h-screen">
+    </div>
+    <div v-if="modal"
+        class="overflow-y-scroll z-[50] rounded-lg w-1/2 h-1/2 max-w-1/2 max-h-1/2 fixed top-[25%] right-[25%] bg-zinc-600 p-5">
+        <div class="flex flex-col gap-5 w-full h-full justify-center items-center">
+            <h2 class="font-semibold text-zinc-200 text-lg">Are you sure you?</h2>
+            <div class="flex gap-5">
+                <button @click="deletePost" class="rounded-lg text-zinc-200 font-semibold w-20 text-center py-2 bg-rose-500
+                hover:bg-rose-600 active:scale-[.98] duration-300">Yes</button>
+                <button @click="closeModal" class=" rounded-lg text-zinc-200 font-semibold w-20 text-center py-2 bg-blue-500
+                hover:bg-blue-600 active:scale-[.98] duration-300">No</button>
             </div>
         </div>
     </div>
