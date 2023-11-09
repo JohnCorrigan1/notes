@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useUser } from 'vue-clerk';
 
