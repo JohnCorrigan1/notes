@@ -18,7 +18,6 @@
     "highlight.js": "^11.8.0",
     "vue": "^3.3.4",
     "vue-clerk": "^0.0.12",
-    "vue-highlight-code": "^0.1.16",
     "vue-router": "^4.2.4",
     "vue3-highlight-component": "^0.3.4"
   },
