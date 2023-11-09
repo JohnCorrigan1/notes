@@ -26,9 +26,10 @@ const {
         <div class="hljs p-5 relative">
             <button class="absolute top-3 right-3" @click="copyCode"><img src="/copyIcon.svg" alt="Copy"
                     class="object-cover opacity-50 hover:opacity-100 active:scale-95 duration-200 h-6" /></button>
-            <highlightjs id="codeBlock" ref="codeBlock" v-code :autodetect="language === ''" :code="code"
-                v-highlightjs="code" :language="language">
-            </highlightjs>
+            <!-- <highlightjs id="codeBlock" ref="codeBlock" v-code :autodetect="language === ''" :code="code" -->
+            <!-- :language="language"> -->
+            <!-- </highlightjs> -->
+            <highlightjs autodetect :code="code" id="codeBlock" ref="codeBlock" v-code />
         </div>
     </div>
 </template>
