@@ -23,7 +23,7 @@ const titleLink = `/${slug}`
         <div class="flex flex-col rounded-lg bg-zinc-400 hover:bg-opacity-40 bg-opacity-20 duration-300 cursor-pointer">
             <img :src="cover" :alt="title" class="w-full object-cover rounded-t-lg" />
             <div class="flex flex-col items-center p-5">
-                <h3 class="text-xl font-semibold">{{ title }}</h3>
+                <h3 class="text-xl font-semibold text-white">{{ title }}</h3>
                 <p class="text-gray-500">{{ formattedDate }}</p>
             </div>
         </div>
