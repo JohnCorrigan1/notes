@@ -15,9 +15,7 @@ const profileProps = { appearance: dark };
 <template>
     <nav class="flex w-full justify-between p-5">
         <RouterLink to="/">
-            <h1 class="text-3xl font-semibold text-white hover:underline cursor-pointer duration-300 active:scale-[.98]">
-                Notes
-            </h1>
+            <img src="/favicon.png" alt="logo" class="w-14 h-14 rounded-lg" />
         </RouterLink>
         <div class="flex gap-5 items-center">
 
